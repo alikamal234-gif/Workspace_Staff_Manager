@@ -2,44 +2,42 @@
 
 Une application web intuitive pour la gestion spatiale du personnel dans un environnement de bureau. Visualisez et gérez l'affectation des employés selon les règles métier spécifiques.
 
-✨ Fonctionnalités
-🎯 Fonctionnalités Principales
-📊 Visualisation Spatiale : Plan d'étage interactif avec 6 zones distinctes
+✨ ##Fonctionnalités
+🎯 ##Fonctionnalités Principales
+**📊 Visualisation Spatiale**: Plan d'étage interactif avec 6 zones distinctes
 
-👥 Gestion des Employés : Ajout, déplacement et suppression d'employés
+**👥 Gestion des Employés**: Ajout, déplacement et suppression d'employés
 
-🎭 Restrictions Intelligentes : Affectation selon les rôles et zones autorisées
+**🎭 Restrictions Intelligentes** : Affectation selon les rôles et zones autorisées
 
-📱 Design Responsive : Interface adaptée desktop, tablette et mobile
+**📱 Design Responsive** : Interface adaptée desktop, tablette et mobile
 
-👤 Profils Détaillés : Vue complète des informations employés
+**👤 Profils Détaillés** : Vue complète des informations employés
 
-🏢 Zones de l'Application
-Salle de conférence - Accès libre
+##🏢 Zones de l'Application
+**Salle de conférence** - Accès libre
 
-Réception - Uniquement réceptionnistes
+**Réception** - Uniquement réceptionnistes
 
-Salle des serveurs - Uniquement techniciens IT
+**Salle des serveurs** - Uniquement techniciens IT
 
-Salle de sécurité - Uniquement agents de sécurité
+**Salle de sécurité** - Uniquement agents de sécurité
 
-Salle du personnel - Accès libre
+**Salle du personnel** - Accès libre
 
-Salle d'archives - Accès restreint
+**Salle d'archives** - Accès restreint
 
-🎨 Rôles et Permissions
-Rôle	Zones Autorisées
-Manager	Toutes zones
-Réceptionniste	Réception + zones communes
-Technicien IT	Salle serveurs + zones communes
-Agent de sécurité	Salle sécurité + zones communes
-Nettoyage	Toutes zones sauf archives
-Autres	Zones communes
-🚀 Démo Live
-🔗 Voir la démo en ligne
+##🎨 Rôles et Permissions
+**Rôle** =>	Zones Autorisées
+**Manager**	=> Toutes zones
+**Réceptionniste** =>	Réception + zones communes
+**Technicien IT**	=> Salle serveurs + zones communes
+**Agent de sécurité** =>	Salle sécurité + zones communes
+**Nettoyage** =>	Toutes zones sauf archives
+**Autres** =>	Zones communes
+
 
 🛠️ Installation
-Prérequis
 Navigateur web moderne (Chrome, Firefox, Safari, Edge)
 
 Connexion Internet (pour les CDN)
@@ -101,15 +99,15 @@ Hiérarchie : Utilisation cohérente des balises h1-h6
 
 Breakpoints Responsive
 css
-/* Desktop */
+### Desktop 
 > 1280px : Grand écran
 1024px - 1279px : Petit écran
 
-/* Tablet */
+### Tablet 
 768px - 1023px : Mode portrait
 1024px - 1279px : Mode paysage
 
-/* Mobile */
+### Mobile */
 ≤ 767px : Mode portrait
 768px - 1023px : Mode paysage
 📁 Structure du Projet
@@ -123,11 +121,11 @@ office-management-system/
 ├── assets/
 │   ├── images/               # Images et icônes
 │   │   ├── default-avatar.png
-│   │   └── zones/
-│   └── docs/                 # Documentation
+│       └── zones/
+│   
 │
 ├── README.md                 # Ce fichier
-└── LICENSE                   # Licence MIT
+
 🧪 Validation Qualité
 ✅ HTML : Validé avec W3C Validator
 
@@ -195,35 +193,5 @@ Prochaines Versions
 
 🚧 PWA capabilities
 
-🐛 Rapport de Bugs
-Si vous rencontrez un problème :
 
-Vérifiez les issues existantes
-
-Créez une nouvelle issue avec :
-
-Description détaillée
-
-Étapes pour reproduire
-
-Comportement attendu vs actuel
-
-Capture d'écran si possible
-
-📄 Licence
-Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus de détails.
-
-👨‍💻 Auteur
-Votre Nom
-
-GitHub: @votre-username
-
-Portfolio: votre-portfolio.com
-
-🙏 Remerciements
-Inspiration design : Modern UI/UX patterns
-
-Icônes : Font Awesome
-
-Validation : W3C Validators
 
