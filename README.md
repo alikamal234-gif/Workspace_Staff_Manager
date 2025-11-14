@@ -31,11 +31,17 @@ Une application web intuitive pour la gestion spatiale du personnel dans un envi
 
 ##🎨 Rôles et Permissions
 **Rôle** =>	Zones Autorisées
+
 **Manager**	=> Toutes zones
+
 **Réceptionniste** =>	Réception + zones communes
+
 **Technicien IT**	=> Salle serveurs + zones communes
+
 **Agent de sécurité** =>	Salle sécurité + zones communes
+
 **Nettoyage** =>	Toutes zones sauf archives
+
 **Autres** =>	Zones communes
 
 
@@ -44,10 +50,6 @@ Navigateur web moderne (Chrome, Firefox, Safari, Edge)
 
 Connexion Internet (pour les CDN)
 
-Installation Locale
-bash
-# Cloner le repository
-git clone https://github.com/votre-username/office-management-system.git
 
 # Se déplacer dans le dossier
 cd office-management-system
@@ -90,23 +92,31 @@ L'employé retourne dans "Unassigned Staff"
 Palette de Couleurs
 css
 --primary-green: #4CAF50;    /* Actions principales */
+
 --warning-orange: #FF9800;   /* Avertissements */
+
 --danger-red: #F44336;       /* Suppressions */
+
 --background: #F5F5F5;       /* Arrière-plan */
+
 --surface: #FFFFFF;          /* Surfaces */
+
 Typographie
 Police principale : System fonts (Arial, Helvetica, sans-serif)
+
 
 Hiérarchie : Utilisation cohérente des balises h1-h6
 
 Breakpoints Responsive
 css
 ### Desktop 
+
 > 1280px : Grand écran
 1024px - 1279px : Petit écran
 
 ### Tablet 
 768px - 1023px : Mode portrait
+
 1024px - 1279px : Mode paysage
 
 ### Mobile */
@@ -117,16 +127,27 @@ text
 office-management-system/
 │
 ├── index.html                 # Page principale
+
 ├── style.css                  # Styles CSS
+
 ├── script.js                  # Logique JavaScript
+
 │
+
 ├── assets/
+
 │   ├── images/               # Images et icônes
+
 │   │   ├── default-avatar.png
+
 │       └── zones/
+
 │   
+
 │
+
 ├── README.md                 # Ce fichier
+
 
 🧪 Validation Qualité
 ✅ HTML : Validé avec W3C Validator
