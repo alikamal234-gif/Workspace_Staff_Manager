@@ -1,10 +1,10 @@
-🏢 Gestion Spatiale du Personnel - Office Management System
+## 🏢 Gestion Spatiale du Personnel - Office Management System
 
 Une application web intuitive pour la gestion spatiale du personnel dans un environnement de bureau. Visualisez et gérez l'affectation des employés selon les règles métier spécifiques.
 
-✨ Fonctionnalités
+## ✨ Fonctionnalités
 
-🎯 Fonctionnalités Principales
+## 🎯 Fonctionnalités Principales
 
 **📊 Visualisation Spatiale**: Plan d'étage interactif avec 6 zones distinctes
 
