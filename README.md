@@ -2,8 +2,10 @@
 
 Une application web intuitive pour la gestion spatiale du personnel dans un environnement de bureau. Visualisez et gérez l'affectation des employés selon les règles métier spécifiques.
 
-✨ ##Fonctionnalités
-🎯 ##Fonctionnalités Principales
+✨ Fonctionnalités
+
+🎯 Fonctionnalités Principales
+
 **📊 Visualisation Spatiale**: Plan d'étage interactif avec 6 zones distinctes
 
 **👥 Gestion des Employés**: Ajout, déplacement et suppression d'employés
