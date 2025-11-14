@@ -51,13 +51,7 @@ Navigateur web moderne (Chrome, Firefox, Safari, Edge)
 Connexion Internet (pour les CDN)
 
 
-# Se déplacer dans le dossier
-cd office-management-system
 
-# Ouvrir dans le navigateur
-# Option 1: Serveur local simple
-python -m http.server 8000
-# Puis visiter http://localhost:8000
 
 # Option 2: Ouvrir directement
 open index.html
@@ -88,7 +82,7 @@ Bouton "X" sur un employé pour le retirer d'une zone
 
 L'employé retourne dans "Unassigned Staff"
 
-🎨 Design System
+**🎨 Design System**
 Palette de Couleurs
 css
 --primary-green: #4CAF50;    /* Actions principales */
@@ -101,7 +95,7 @@ css
 
 --surface: #FFFFFF;          /* Surfaces */
 
-Typographie
+**Typographie**
 Police principale : System fonts (Arial, Helvetica, sans-serif)
 
 
@@ -149,72 +143,30 @@ office-management-system/
 ├── README.md                 # Ce fichier
 
 
-🧪 Validation Qualité
-✅ HTML : Validé avec W3C Validator
+## 🧪Validation Qualité##
+✅ **HTML** : Validé avec W3C Validator
 
-✅ CSS : Validé avec W3C CSS Validator
+✅ **CSS** : Validé avec W3C CSS Validator
 
-✅ Accessibilité : Respect des standards WCAG
+✅ **Accessibilité** : Respect des standards WCAG
 
-✅ Performance : Optimisation des assets
+✅ **Performance** : Optimisation des assets
 
-✅ Cross-browser : Testé sur Chrome, Firefox, Safari, Edge
+✅ **Cross-browser** : Testé sur Chrome, Firefox, Safari, Edge
 
 🚧 Fonctionnalités Bonus (Optionnelles)
-Drag & Drop : Glisser-déposer des employés
+**Drag & Drop** : Glisser-déposer des employés
 
-Édition : Modifier les informations employés
+**Édition** : Modifier les informations employés
 
-Recherche : Filtrer par nom ou rôle
+**Recherche** : Filtrer par nom ou rôle
 
-Persistance : Sauvegarde automatique (localStorage)
+**Persistance** : Sauvegarde automatique (localStorage)
 
-Réorganisation auto : Répartition aléatoire intelligente
+**Réorganisation auto** : Répartition aléatoire intelligente
 
-Photos par défaut : Avatar par défaut si photo manquante
+**Photos par défaut** : Avatar par défaut si photo manquante
 
-🤝 Contribution
-Les contributions sont les bienvenues ! Voici comment participer :
-
-Fork le projet
-
-Créez une branche (git checkout -b feature/AmazingFeature)
-
-Commitez vos changements (git commit -m 'Add some AmazingFeature')
-
-Push la branche (git push origin feature/AmazingFeature)
-
-Ouvrez une Pull Request
-
-Standards de Code
-Respecter l'indentation (2 espaces)
-
-Commenter le code complexe
-
-Tester sur multiples appareils
-
-Valider le code avant commit
-
-📝 Journal de Développement
-Version 1.0.0 (Current)
-✅ Structure HTML complète
-
-✅ Design system cohérent
-
-✅ Responsive design
-
-✅ Gestion des employés
-
-✅ Restrictions métier
-
-✅ Validation W3C
-
-Prochaines Versions
-🚧 Fonctionnalités bonus
-
-🚧 Tests automatisés
-
-🚧 PWA capabilities
 
 
 
