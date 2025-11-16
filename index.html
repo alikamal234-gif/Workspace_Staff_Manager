@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="src/style.css">
+</head>
+
+<body class="h-screen w-full flex">
+    <header class="w-[25%] h-full  bg-gray-100 ">
+        <div class="h-[80%] w-full flex flex-col items-center p-2 gap-3">
+            <div class="w-[90%] flex justify-start mb-7">
+                <h2 class="modal-position"   id="manage-modal-title">Staff Members</h2>
+            </div>
+            
+            <!-- les taches  -->
+            <div class="w-[95%] h-20 bg-gray-200 border-2 border-gray-200 rounded-2xl flex items-center p-2 gap-2 ">
+                <div class="w-15 h-15  rounded-full " style="border: 2px solid rgb(0, 166, 255);"></div>
+                <div class="grow-1">
+                    <h2 class="font-bold">Ali kamal</h2>
+                    <p class="text-gray-500">Securite</p>
+                </div>
+                <div>
+                    <h2 class="text-yellow-500 font-bold">Edit</h2>
+                </div>
+
+            </div>
+
+            <div class="w-[95%] h-20 bg-gray-200 border-2 border-gray-200 rounded-2xl flex items-center p-2 gap-2 ">
+                <div class="w-15 h-15  rounded-full " style="border: 2px solid rgb(0, 166, 255);"></div>
+                <div class="grow-1">
+                    <h2 class="font-bold">Ali kamal</h2>
+                    <p class="text-gray-500">Securite</p>
+                </div>
+                <div>
+                    <h2 class="text-yellow-500 font-bold">Edit</h2>
+                </div>
+
+            </div>
+
+            <div class="w-[95%] h-20 bg-gray-200 border-2 border-gray-200 rounded-2xl flex items-center p-2 gap-2 ">
+                <div class="w-15 h-15  rounded-full " style="border: 2px solid rgb(0, 166, 255);"></div>
+                <div class="grow-1">
+                    <h2 class="font-bold">Ali kamal</h2>
+                    <p class="text-gray-500">Securite</p>
+                </div>
+                <div>
+                    <h2 class="text-yellow-500 font-bold">Edit</h2>
+                </div>
+
+            </div>
+        </div>
+        <div class="flex justify-center items-center h-[20%]">
+            <button class="p-2 w-[90%] bg-blue-500 rounded-2xl font-bold text-white " id="openinformations"
+                type="submit">+ Add New</button>
+        </div>
+    </header>
+    <main class="w-[85%] h-full flex justify-center items-center">
+        <div class="boxRooms w-[96%] h-[90%] border-2 relative ">
+            <div class="room1 flex flex-col justify-center items-center">
+                <div class="w-1/2 h-1/2 border-2 flex justify-center items-center">
+                    <h2 class="text-black font-bold">Conference Room</h2>
+                </div>
+                <div class="">
+                    <button type="submit" class="btnAdd">+</button>
+                </div>
+            </div>
+            <div class="room2 flex  justify-center items-center">
+                <div class="w-1/2 h-1/2"></div>
+            </div>
+            <div class="room3 flex flex-col justify-center items-center gap-2">
+                <div class="w-1/2 h-1/2 border-2 flex justify-center items-center">
+                    <h2 class="text-black font-bold">Servers Room </h2>
+                </div>
+                <div class="">
+                    <button type="submit" class="btnAdd">+</button>
+                </div>
+            </div>
+            <div class="room4 flex flex-col justify-center items-center">
+                <div class="w-1/2 h-1/2 border-2 flex justify-center items-center">
+                    <h2 class="text-black font-bold">Security Room</h2>
+                </div>
+                <div class="">
+                    <button type="submit" class="btnAdd">+</button>
+                </div>
+            </div>
+            <div class="room5 flex flex-col justify-center items-center">
+                <div class="w-1/2 h-1/2 border-2 flex justify-center items-center">
+                    <h2 class="text-black font-bold">Reception</h2>
+                </div>
+                <div class="">
+                    <button type="submit" class="btnAdd">+</button>
+                </div>
+            </div>
+            <div class="room6 flex justify-center items-center">
+                <div class="w-1/2 h-1/2 "></div>
+            </div>
+            <div class="room7 flex flex-col justify-center items-center">
+                <div class="w-1/2 h-1/2 border-2 flex justify-center items-center">
+                    <h2 class="text-black font-bold">Staff Room</h2>
+                </div>
+                <div class="">
+                    <button type="submit" class="btnAdd">+</button>
+                </div>
+            </div>
+            <div class="room8 flex flex-col justify-center items-center">
+                <div class="w-1/2 h-1/2 border-2 flex justify-center items-center">
+                    <h2 class="text-black font-bold">Vault</h2>
+                </div>
+                <div class="">
+                    <button type="submit" class="btnAdd">+</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-overlay" id="manage-job-modal" style="display: none;">
+            <div class="modal-content">
+                <button class="modal-close-btn" id="modal-close-btn-manage" aria-label="Fermer">&times;</button>
+                <h2 class="modal-position" id="manage-modal-title">Add Worker</h2>
+                <form class="manage-form" id="manage-job-form" novalidate>
+                    <!-- name -->
+                    <div class="boxInput">
+                        <label for="name">Name :</label>
+                        <br>
+                        <input type="text" id="name">
+                        <span></span>
+                    </div>
+                    <!-- Role -->
+                    <div class="boxInput">
+                        <label for="photo">Role :</label>
+                        <br>
+                        <select name="" id="">
+                            <option value="Receptionist">Receptionist</option>
+                            <option value="IT Guy">IT Guy</option>
+                            <option value="Security">Security</option>
+                            <option value="Cleaning">Cleaning</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <!-- url -->
+                    <div class="boxInput">
+                        <label for="url">Photo (URL) :</label>
+                        <br>
+                        <input type="text" id="">
+                        <span></span>
+                    </div>
+                    <!-- image -->
+
+                    <div class="w-[90%] h-30 flex justify-center items-center">
+                        <div class="w-25 h-25 rounded-full border-2 border-gray-500"> </div>
+                    </div>
+
+                    <h2>Experience</h2>
+
+                    <div class="boxInputExperience">
+                        <div class="boxInput">
+                            <label for="Company">Company :</label>
+                            <br>
+                            <input type="text" id="">
+                            <span></span>
+                        </div>
+
+                        <div class="boxInput">
+                            <label for="Role">Role :</label>
+                            <br>
+                            <input type="text" id="">
+                            <span></span>
+                        </div>
+
+                        <div class="boxInput">
+                            <label for="from">From :</label>
+                            <br>
+                            <input type="date" id="">
+                            <span></span>
+                        </div>
+
+                        <div class="boxInput">
+                            <label for="to">To :</label>
+                            <br>
+                            <input type="date" id="">
+                            <span></span>
+                        </div>
+
+
+                    </div>
+
+                    <div class="w-full flex ">
+                        <button type="submit" class="p-2 bg-yellow-500 font-bold text-white rounded-2xl">Add
+                            Experience</button>
+                    </div>
+
+
+                    <div class="boxInput">
+                        <label for="email">Email :</label>
+                        <br>
+                        <input type="email" id="">
+                        <span></span>
+                    </div>
+
+                    <div class="boxInput">
+                        <label for="phone">Phone :</label>
+                        <br>
+                        <input type="tel" id="">
+                        <span></span>
+                    </div>
+
+                    <div class="w-full flex justify-end gap-2   ">
+                        <button type="submit" class="p-2 font-bold text-white bg-blue-500 rounded-2xl h-11 w-33">Save
+                            Worker</button>
+                        <button type="submit"
+                            class="p-2 font-bold text-white bg-gray-500 rounded-2xl h-11 w-25">Cancel</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+
+
+        <div class="addtaches" id="manage-job-modal-tache" style="display: none;">
+            <div class="modal-content-tache">
+                <button class="modal-close-btn" id="modal-close-btn-manage-tache" aria-label="Fermer">&times;</button>
+                <h2 class="modal-position" id="manage-modal-title">Select Worker to Assign</h2>
+                
+            </div>
+        </div>
+
+    </main>
+
+</body>
+<script src="src/js/main.js"></script>
+
+</html>
