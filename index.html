@@ -11,47 +11,14 @@
 
 <body class="h-screen w-full flex">
     <header class="w-[25%] h-full  bg-gray-100 ">
-        <div class="h-[80%] w-full flex flex-col items-center p-2 gap-3">
+        <div id="placeTache" class="h-[80%] w-full flex flex-col items-center p-2 gap-3">
             <div class="w-[90%] flex justify-start mb-7">
                 <h2 class="modal-position"   id="manage-modal-title">Staff Members</h2>
             </div>
             
             <!-- les taches  -->
-            <div class="w-[95%] h-20 bg-gray-200 border-2 border-gray-200 rounded-2xl flex items-center p-2 gap-2 ">
-                <div class="w-15 h-15  rounded-full " style="border: 2px solid rgb(0, 166, 255);"></div>
-                <div class="grow-1">
-                    <h2 class="font-bold">Ali kamal</h2>
-                    <p class="text-gray-500">Securite</p>
-                </div>
-                <div>
-                    <h2 class="text-yellow-500 font-bold">Edit</h2>
-                </div>
+            
 
-            </div>
-
-            <div class="w-[95%] h-20 bg-gray-200 border-2 border-gray-200 rounded-2xl flex items-center p-2 gap-2 ">
-                <div class="w-15 h-15  rounded-full " style="border: 2px solid rgb(0, 166, 255);"></div>
-                <div class="grow-1">
-                    <h2 class="font-bold">Ali kamal</h2>
-                    <p class="text-gray-500">Securite</p>
-                </div>
-                <div>
-                    <h2 class="text-yellow-500 font-bold">Edit</h2>
-                </div>
-
-            </div>
-
-            <div class="w-[95%] h-20 bg-gray-200 border-2 border-gray-200 rounded-2xl flex items-center p-2 gap-2 ">
-                <div class="w-15 h-15  rounded-full " style="border: 2px solid rgb(0, 166, 255);"></div>
-                <div class="grow-1">
-                    <h2 class="font-bold">Ali kamal</h2>
-                    <p class="text-gray-500">Securite</p>
-                </div>
-                <div>
-                    <h2 class="text-yellow-500 font-bold">Edit</h2>
-                </div>
-
-            </div>
         </div>
         <div class="flex justify-center items-center h-[20%]">
             <button class="p-2 w-[90%] bg-blue-500 rounded-2xl font-bold text-white " id="openinformations"
@@ -130,9 +97,9 @@
                     </div>
                     <!-- Role -->
                     <div class="boxInput">
-                        <label for="photo">Role :</label>
+                        <label for="role">Role :</label>
                         <br>
-                        <select name="" id="">
+                        <select name="" id="role">
                             <option value="Receptionist">Receptionist</option>
                             <option value="IT Guy">IT Guy</option>
                             <option value="Security">Security</option>
@@ -144,13 +111,15 @@
                     <div class="boxInput">
                         <label for="url">Photo (URL) :</label>
                         <br>
-                        <input type="text" id="">
+                        <input type="text" id="photo">
                         <span></span>
                     </div>
                     <!-- image -->
 
                     <div class="w-[90%] h-30 flex justify-center items-center">
-                        <div class="w-25 h-25 rounded-full border-2 border-gray-500"> </div>
+                        <div class="w-25 h-25 rounded-full border-2 border-gray-500">
+                            <img src="" alt="" id="imageView" class="w-full h-full rounded-full">
+                        </div>
                     </div>
 
                     <h2>Experience</h2>
@@ -159,28 +128,28 @@
                         <div class="boxInput">
                             <label for="Company">Company :</label>
                             <br>
-                            <input type="text" id="">
+                            <input type="text" id="company">
                             <span></span>
                         </div>
 
                         <div class="boxInput">
                             <label for="Role">Role :</label>
                             <br>
-                            <input type="text" id="">
+                            <input type="text" id="roleExperience">
                             <span></span>
                         </div>
 
                         <div class="boxInput">
                             <label for="from">From :</label>
                             <br>
-                            <input type="date" id="">
+                            <input type="date" id="from">
                             <span></span>
                         </div>
 
                         <div class="boxInput">
                             <label for="to">To :</label>
                             <br>
-                            <input type="date" id="">
+                            <input type="date" id="to">
                             <span></span>
                         </div>
 
@@ -188,7 +157,7 @@
                     </div>
 
                     <div class="w-full flex ">
-                        <button type="submit" class="p-2 bg-yellow-500 font-bold text-white rounded-2xl">Add
+                        <button type="submit" class="p-2 bg-yellow-500 font-bold text-white rounded-2xl" >Add
                             Experience</button>
                     </div>
 
@@ -196,19 +165,19 @@
                     <div class="boxInput">
                         <label for="email">Email :</label>
                         <br>
-                        <input type="email" id="">
+                        <input type="email" id="email">
                         <span></span>
                     </div>
 
                     <div class="boxInput">
                         <label for="phone">Phone :</label>
                         <br>
-                        <input type="tel" id="">
+                        <input type="tel" id="phone">
                         <span></span>
                     </div>
 
                     <div class="w-full flex justify-end gap-2   ">
-                        <button type="submit" class="p-2 font-bold text-white bg-blue-500 rounded-2xl h-11 w-33">Save
+                        <button type="submit" class="p-2 font-bold text-white bg-blue-500 rounded-2xl h-11 w-33" id="saveWorker">Save
                             Worker</button>
                         <button type="submit"
                             class="p-2 font-bold text-white bg-gray-500 rounded-2xl h-11 w-25">Cancel</button>
