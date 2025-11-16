@@ -220,3 +220,9 @@
 @keyframes slideIn {
     to { transform: translateY(0); }
 }
+
+.showError{
+    color: red;
+    font-size: 12px;
+    font-weight: 500;
+}

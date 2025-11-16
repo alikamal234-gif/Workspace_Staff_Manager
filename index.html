@@ -11,12 +11,13 @@
 
 <body class="h-screen w-full flex">
     <header class="w-[25%] h-full  bg-gray-100 ">
-        <div id="placeTache" class="h-[80%] w-full flex flex-col items-center p-2 gap-3">
+        <div  class="h-[80%] w-full flex flex-col items-center p-2 gap-3">
             <div class="w-[90%] flex justify-start mb-7">
                 <h2 class="modal-position"   id="manage-modal-title">Staff Members</h2>
             </div>
-            
-            <!-- les taches  -->
+            <div id="placeTache" class="h-[80%] w-full flex flex-col items-center p-2 gap-3 overflow-auto">
+                <!-- les taches  -->
+            </div>
             
 
         </div>
@@ -93,7 +94,7 @@
                         <label for="name">Name :</label>
                         <br>
                         <input type="text" id="name">
-                        <span></span>
+                        <span class="showError"></span>
                     </div>
                     <!-- Role -->
                     <div class="boxInput">
@@ -112,7 +113,7 @@
                         <label for="url">Photo (URL) :</label>
                         <br>
                         <input type="text" id="photo">
-                        <span></span>
+                        <span class="showError"></span></span>
                     </div>
                     <!-- image -->
 
@@ -129,28 +130,28 @@
                             <label for="Company">Company :</label>
                             <br>
                             <input type="text" id="company">
-                            <span></span>
+                            <span class="showError"></span></span>
                         </div>
 
                         <div class="boxInput">
                             <label for="Role">Role :</label>
                             <br>
                             <input type="text" id="roleExperience">
-                            <span></span>
+                            <span class="showError"></span></span>
                         </div>
 
                         <div class="boxInput">
                             <label for="from">From :</label>
                             <br>
                             <input type="date" id="from">
-                            <span></span>
+                            <span class="showError"></span></span>
                         </div>
 
                         <div class="boxInput">
                             <label for="to">To :</label>
                             <br>
                             <input type="date" id="to">
-                            <span></span>
+                            <span class="showError"></span></span>
                         </div>
 
 
@@ -166,14 +167,14 @@
                         <label for="email">Email :</label>
                         <br>
                         <input type="email" id="email">
-                        <span></span>
+                        <span class="showError"></span></span>
                     </div>
 
                     <div class="boxInput">
                         <label for="phone">Phone :</label>
                         <br>
                         <input type="tel" id="phone">
-                        <span></span>
+                        <span class="showError"></span></span>
                     </div>
 
                     <div class="w-full flex justify-end gap-2   ">
