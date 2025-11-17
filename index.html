@@ -11,14 +11,14 @@
 
 <body class="h-screen w-full flex">
     <header class="w-[25%] h-full  bg-gray-100 ">
-        <div  class="h-[80%] w-full flex flex-col items-center p-2 gap-3">
+        <div class="h-[80%] w-full flex flex-col items-center p-2 gap-3">
             <div class="w-[90%] flex justify-start mb-7">
-                <h2 class="modal-position"   id="manage-modal-title">Staff Members</h2>
+                <h2 class="modal-position" id="manage-modal-title">Staff Members</h2>
             </div>
             <div id="placeTache" class="h-[80%] w-full flex flex-col items-center p-2 gap-3 overflow-auto">
                 <!-- les taches  -->
             </div>
-            
+
 
         </div>
         <div class="flex justify-center items-center h-[20%]">
@@ -26,14 +26,16 @@
                 type="submit">+ Add New</button>
         </div>
     </header>
+
     <main class="w-[85%] h-full flex justify-center items-center">
         <div class="boxRooms w-[96%] h-[90%] border-2 relative ">
+            <!-- <img src="s" alt=""> -->
             <div class="room1 flex flex-col justify-center items-center">
                 <div class="w-1/2 h-1/2 border-2 flex justify-center items-center">
-                    <h2 class="text-black font-bold">Conference Room</h2>
+                    <h2 class="text-black font-bold">Salle de conférence</h2>
                 </div>
                 <div class="">
-                    <button type="submit" class="btnAdd">+</button>
+                    <button name-rooms = "conférence" type="submit" class="btnAdd">+</button>
                 </div>
             </div>
             <div class="room2 flex  justify-center items-center">
@@ -41,26 +43,26 @@
             </div>
             <div class="room3 flex flex-col justify-center items-center gap-2">
                 <div class="w-1/2 h-1/2 border-2 flex justify-center items-center">
-                    <h2 class="text-black font-bold">Servers Room </h2>
+                    <h2 class="text-black font-bold">Salle des serveurs </h2>
                 </div>
                 <div class="">
-                    <button type="submit" class="btnAdd">+</button>
+                    <button name-rooms = "serveurs" type="submit" class="btnAdd">+</button>
                 </div>
             </div>
             <div class="room4 flex flex-col justify-center items-center">
                 <div class="w-1/2 h-1/2 border-2 flex justify-center items-center">
-                    <h2 class="text-black font-bold">Security Room</h2>
+                    <h2 class="text-black font-bold">Salle de sécurité</h2>
                 </div>
                 <div class="">
-                    <button type="submit" class="btnAdd">+</button>
+                    <button name-rooms = "sécurité"   type="submit" class="btnAdd">+</button>
                 </div>
             </div>
             <div class="room5 flex flex-col justify-center items-center">
                 <div class="w-1/2 h-1/2 border-2 flex justify-center items-center">
-                    <h2 class="text-black font-bold">Reception</h2>
+                    <h2 class="text-black font-bold">Réception</h2>
                 </div>
                 <div class="">
-                    <button type="submit" class="btnAdd">+</button>
+                    <button name-rooms ="Réception" type="submit" class="btnAdd">+</button>
                 </div>
             </div>
             <div class="room6 flex justify-center items-center">
@@ -68,22 +70,22 @@
             </div>
             <div class="room7 flex flex-col justify-center items-center">
                 <div class="w-1/2 h-1/2 border-2 flex justify-center items-center">
-                    <h2 class="text-black font-bold">Staff Room</h2>
+                    <h2 class="text-black font-bold">Salle du personnel</h2>
                 </div>
                 <div class="">
-                    <button type="submit" class="btnAdd">+</button>
+                    <button name-rooms = "personnel" type="submit" class="btnAdd">+</button>
                 </div>
             </div>
             <div class="room8 flex flex-col justify-center items-center">
                 <div class="w-1/2 h-1/2 border-2 flex justify-center items-center">
-                    <h2 class="text-black font-bold">Vault</h2>
+                    <h2 class="text-black font-bold">Salle d’archives</h2>
                 </div>
                 <div class="">
-                    <button type="submit" class="btnAdd">+</button>
+                    <button name-rooms = "archives" type="submit" class="btnAdd">+</button>
                 </div>
             </div>
         </div>
-        
+
         <div class="modal-overlay" id="manage-job-modal" style="display: none;">
             <div class="modal-content">
                 <button class="modal-close-btn" id="modal-close-btn-manage" aria-label="Fermer">&times;</button>
@@ -101,10 +103,11 @@
                         <label for="role">Role :</label>
                         <br>
                         <select name="" id="role">
-                            <option value="Receptionist">Receptionist</option>
-                            <option value="IT Guy">IT Guy</option>
-                            <option value="Security">Security</option>
-                            <option value="Cleaning">Cleaning</option>
+                            <option value="Réceptionniste">Réceptionniste</option>
+                            <option value="Techniciens IT">Techniciens IT</option>
+                            <option value="Agents de sécurité">Agents de sécurité</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Nettoyage">Nettoyage</option>
                             <option value="Other">Other</option>
                         </select>
                     </div>
@@ -123,42 +126,48 @@
                         </div>
                     </div>
 
-                    <h2>Experience</h2>
 
-                    <div class="boxInputExperience">
-                        <div class="boxInput">
-                            <label for="Company">Company :</label>
-                            <br>
-                            <input type="text" id="company">
-                            <span class="showError"></span></span>
+                    <div id="placeExperience" class="w-full flex flex-col items-center gap-5 ">
+
+
+                        <h2>Experience</h2>
+
+                        <div class="boxInputExperience">
+                            <div class="boxInput">
+                                <label for="Company">Company :</label>
+                                <br>
+                                <input type="text" class="companyOrigin" id="company">
+                                <span class="showError"></span></span>
+                            </div>
+
+                            <div class="boxInput">
+                                <label for="Role">Role :</label>
+                                <br>
+                                <input type="text" class="roleOrigin" id="roleExperience">
+                                <span class="showError"></span></span>
+                            </div>
+
+                            <div class="boxInput">
+                                <label for="from">From :</label>
+                                <br>
+                                <input type="date" class="fromOrigin" id="from">
+                                <span class="showError"></span></span>
+                            </div>
+
+                            <div class="boxInput">
+                                <label for="to">To :</label>
+                                <br>
+                                <input type="date" class="toOrigin" id="to">
+                                <span class="showError"></span></span>
+                            </div>
+
+
                         </div>
-
-                        <div class="boxInput">
-                            <label for="Role">Role :</label>
-                            <br>
-                            <input type="text" id="roleExperience">
-                            <span class="showError"></span></span>
-                        </div>
-
-                        <div class="boxInput">
-                            <label for="from">From :</label>
-                            <br>
-                            <input type="date" id="from">
-                            <span class="showError"></span></span>
-                        </div>
-
-                        <div class="boxInput">
-                            <label for="to">To :</label>
-                            <br>
-                            <input type="date" id="to">
-                            <span class="showError"></span></span>
-                        </div>
-
-
                     </div>
 
                     <div class="w-full flex ">
-                        <button type="submit" class="p-2 bg-yellow-500 font-bold text-white rounded-2xl" >Add
+                        <button type="submit" id="addExperience"
+                            class="p-2 bg-yellow-500 font-bold text-white rounded-2xl">Add
                             Experience</button>
                     </div>
 
@@ -177,8 +186,9 @@
                         <span class="showError"></span></span>
                     </div>
 
-                    <div class="w-full flex justify-end gap-2   ">
-                        <button type="submit" class="p-2 font-bold text-white bg-blue-500 rounded-2xl h-11 w-33" id="saveWorker">Save
+                    <div class="w-full flex justify-end gap-2 ">
+                        <button type="submit" class="p-2 font-bold text-white bg-blue-500 rounded-2xl h-11 w-33"
+                            id="saveWorker">Save
                             Worker</button>
                         <button type="submit"
                             class="p-2 font-bold text-white bg-gray-500 rounded-2xl h-11 w-25">Cancel</button>
@@ -193,10 +203,65 @@
         <div class="addtaches" id="manage-job-modal-tache" style="display: none;">
             <div class="modal-content-tache">
                 <button class="modal-close-btn" id="modal-close-btn-manage-tache" aria-label="Fermer">&times;</button>
-                <h2 class="modal-position" id="manage-modal-title">Select Worker to Assign</h2>
-                
+                <h2 class="modal-position" id="Worker-modal-Assign">Select Worker to Assign</h2>
+
             </div>
         </div>
+
+
+
+        <!-- popul affichage -->
+        <div class="modal-affichage " id="manage-affiche-modal" style="display: none;">
+            <div class="modal-content flex flex-col gap-10">
+                <button class="modal-close-btn" id="modal-close-btn-affichage" aria-label="Fermer">&times;</button>
+                <h2 class="modal-position" id="manage-modal-title">Profile</h2>
+                <form class="manage-form flex flex-col gap-50" id="manage-job-form">
+                    <!-- name -->
+
+                    <!-- image -->
+
+                    <div class="w-[100%] h-30 flex gap-3 items-center ">
+                        <div class="w-25 h-25 rounded-full border-2 border-blue-500">
+                            <img src="" alt="" id="afficheImgView" class="w-full h-full rounded-full">
+                        </div>
+                        <div>
+                            <h2 class="font-bold text-2xl" id="affichName">Name</h2>
+                            <p id="AfficheRole">IT</p>
+                        </div>
+                    </div>
+
+                    <div class="w-full mt-10 mb-10">
+
+                        <div class="w-full flex flex-col gap-5 ">
+                            <div class="w-full flex gap-2 rounded-lg">
+                                <h3 class="font-bold">Email :</h3>
+                                <p id="AfficheEmail">alikamal0675@gmaiol.com</p>
+                            </div>
+                            <div class="w-full flex gap-2 rounded-lg">
+                                <h3 class="font-bold">Phone :</h3>
+                                <p id="AffichePhone">+212 675-091133</p>
+                            </div>
+                            <div class="w-full flex gap-2 rounded-lg">
+                                <h3 class="font-bold">Current Location :</h3>
+                                <p id="AfficheLocation">Unassigned</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="w-full ">
+                        <h2 class="font-bold mb-5">Work Experience</h2>
+                        <div id="boxWorkExperiece" class="w-full flex flex-col gap-5 ">
+                            <!-- works Experience -->
+                            
+                            
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
 
     </main>
 
