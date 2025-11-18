@@ -13,6 +13,7 @@ const manageAfficheModal = document.getElementById("manage-affiche-modal")
 const boxWorkExperiece = document.getElementById("boxWorkExperiece")
 const modalCloseBtnAffichage = document.getElementById("modal-close-btn-affichage")
 const modalContentTache = document.querySelector(".modal-content-tache")
+const FiltrageEmplyer = document.getElementById("FiltrageEmplyer")
 
 let countourId = 0;
 const validationRegex = [
@@ -55,6 +56,8 @@ const validationRegex = [
 
 document.addEventListener("DOMContentLoaded", (event) => {
     getData();
+    // filteremplyers()
+    affichageFilter()
     // openAfficheModal()
 
 })
@@ -123,7 +126,6 @@ function SetData() {
     localStorage.setItem("Data", JSON.stringify(datalist));
 
     getData();
-
     clearInputs();
 }
 
@@ -135,7 +137,6 @@ function getData() {
     if (data.length > 0) {
         console.log("Nombre d'éléments", data.length);
 
-        console.log("hello")
         placeTache.innerHTML = "";
 
 
@@ -143,11 +144,11 @@ function getData() {
             placeTache.innerHTML += `
                 <div id-coutor="${index}" class="cards w-[95%] h-20 bg-gray-200 border-2 border-gray-200 rounded-2xl flex items-center p-2 gap-2 mb-2">
                     <div class="w-12 h-12 rounded-full border-2 border-blue-500 overflow-hidden">
-                        <img src="${minidata.photo}" alt="${minidata.nom}" class="w-full h-full object-cover">
+                        <img  src="${minidata.photo}" alt="${minidata.nom}" class="afficheimg w-full h-full object-cover">
                     </div>
                     <div class="flex-1">
-                        <h2 class="font-bold">${minidata.nom}</h2>
-                        <p class="text-gray-500">${minidata.role}</p>
+                        <h2  class="affichenom font-bold">${minidata.nom}</h2>
+                        <p  class="textRole text-gray-500">${minidata.role}</p>
                     </div>
                     <div>
                         <button class="text-yellow-500 font-bold hover:text-yellow-600">Edit</button>
@@ -346,10 +347,82 @@ function openAfficheModal() {
             console.log(btnClicked);
             afficheData(btnClicked)
             
+
         })
     })
 
 }
 
 // localStorage.removeItem("Data")
+
+// affichageFilter()
+function affichageFilter() {
+    const roomsRoles = {
+        conférence: ["Nettoyage", "Manager", "Other"],
+        serveurs: ["Techniciens IT", "Manager", "Nettoyage"],
+        sécurité: ["Agents de sécurité", "Manager", "Nettoyage"],
+        Réception: ["Receptionniste", "Nettoyage", "Manager"],
+        personnel: ["Nettoyage", "Manager", "Other"],
+        archives: ["Manager", "Other"]
+    };
+
+    btnAdd.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const room = btn.getAttribute("name-rooms");
+            const allowedRoles = roomsRoles[room];
+            FiltrageEmplyer.innerHTML = ""
+            if (allowedRoles) {
+                filterEmployersRole(allowedRoles, room);
+            }
+        });
+    });
+}
+
+function filterEmployersRole(allowedRoles, roomName) {
+    const afficheDataBtn = document.querySelectorAll(".cards");
+    const filteredEmployees = [];
+
+    afficheDataBtn.forEach((databtn, index) => {
+        const roleElement = databtn.querySelector(".textRole");
+        const employeeRole = roleElement ? roleElement.textContent : "";
+        
+        // Vérifier si le rôle de l'employé est autorisé pour cette pièce
+        const isAllowed = allowedRoles.includes(employeeRole);
+        
+        if (isAllowed) {
+            filteredEmployees.push({
+                element: databtn,
+                role: employeeRole,
+                index: index
+            });
+            console.log(databtn)
+            FiltrageEmplyer.innerHTML += `
+                <div id-coutor="${index}" class="cards w-[95%] h-20 bg-gray-200 border-2 border-gray-200 rounded-2xl flex items-center p-2 gap-2 mb-2">
+                    <div class="w-12 h-12 rounded-full border-2 border-blue-500 overflow-hidden">
+                        <img src="${databtn.querySelector(".afficheimg").src}" alt="" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1">
+                        <h2 class="font-bold">${databtn.querySelector(".affichenom").textContent}</h2>
+                        <p  class="textRole text-gray-500">${databtn.querySelector(".textRole").textContent}</p>
+                    </div>
+                    
+                </div>
+            `;
+            
+        } else {
+            FiltrageEmplyer.innerHTML += ""
+        }
+    });
+
+    console.log(`Employés autorisés pour ${roomName}:`, filteredEmployees);
+    return filteredEmployees;
+}
+
+// Remplacer filteremplyers() par cette fonction utilitaire
+function showAllEmployees() {
+    const afficheDataBtn = document.querySelectorAll(".cards");
+    afficheDataBtn.forEach(databtn => {
+        databtn.style.display = "flex";
+    });
+}
 
