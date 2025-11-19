@@ -17,7 +17,6 @@ const FiltrageEmplyer = document.getElementById("FiltrageEmplyer")
 const clearAllEmployer = document.getElementById("clearAllEmployer")
 
 //================= les objects de validation rejex =====================================
-// const countourId = 0
 const validationRegex = [
     {
         id: "name",
@@ -55,24 +54,21 @@ const validationRegex = [
         message: "Le rôle doit contenir uniquement des lettres (2-30 caractères)"
     }
 ];
-// ==============================================================================
-clearAllEmployerbtn()
-document.addEventListener("DOMContentLoaded", (event) => {
-    getData();
-    // filteremplyers()
-    affichageFilter()
-    // openAfficheModal()
-    
 
-})
-//===================== les données delocalStorage =======================
+// ==============================================================================
 let datalist = JSON.parse(localStorage.getItem("Data")) || [];
-console.log(datalist);
+
+document.addEventListener("DOMContentLoaded", (event) => {
+    clearAllEmployerbtn();
+    getData();
+    affichageFilter();
+})
 
 // ===================== addevent listiner =========================================
 addNewJobBtn.addEventListener("click", () => {
     informations.style.display = "flex"
 })
+
 modalClose.addEventListener("click", () => {
     informations.style.display = "none"
 })
@@ -82,6 +78,7 @@ btnAdd.forEach(btn => {
         manageJobModalTache.style.display = "flex"
     })
 })
+
 modalCloseBtnManageTache.addEventListener("click", () => {
     manageJobModalTache.style.display = "none"
 })
@@ -89,38 +86,40 @@ modalCloseBtnManageTache.addEventListener("click", () => {
 saveWorker.addEventListener("click", (e) => {
     e.preventDefault()
     SetData()
-
 })
+
 document.getElementById("photo").addEventListener("input", () => {
     document.getElementById("imageView").src = document.getElementById("photo").value
 })
+
 addExperience.addEventListener("click", (e) => {
     e.preventDefault()
     creatElxperienceItem()
-
 })
+
 //====================================================================================
 function dataglobale(){
     const data = JSON.parse(localStorage.getItem("Data")) || [];
     return data;
 }
+
 // ========================== stocke les dataes dans localeStorage =====================
 function SetData() {
-    // debugger;
+    // Récupérer d'abord les données existantes
+    datalist = JSON.parse(localStorage.getItem("Data")) || [];
+    
     const name = document.getElementById("name").value;
     const role = document.getElementById("role").value;
     const photo = document.getElementById("photo").value;
     const email = document.getElementById("email").value;
     const phone = document.getElementById("phone").value;
 
-
     if (!formValidation()) {
-
         return;
     }
-    console.log(inputexpervalue());
 
     const data = {
+        isAsind: false,
         nom: name,
         role: role,
         photo: photo,
@@ -128,7 +127,7 @@ function SetData() {
         email: email,
         phone: phone
     };
-    console.log(data);
+    
     datalist.push(data);
     localStorage.setItem("Data", JSON.stringify(datalist));
 
@@ -136,40 +135,37 @@ function SetData() {
     clearInputs();
 }
 
-// ==================================================================================================
-
-
 // ========================== get data from localeStorage et afficher dans le sidebar ==============================
-
 function getData() {
     const data = JSON.parse(localStorage.getItem("Data")) || [];
 
-
-
     if (data.length > 0) {
         console.log("Nombre d'éléments", data.length);
-
         placeTache.innerHTML = "";
 
-
-        data.forEach((minidata, index, array) => {
+        data.forEach((minidata, index) => {
+            // Afficher TOUS les employés, mais gérer l'affichage avec displaySidbar()
             placeTache.innerHTML += `
                 <div id-coutor="${index}" class="cards w-[95%] h-20 bg-gray-200 border-2 border-gray-200 rounded-2xl flex items-center p-2 gap-2 mb-2 cursor-pointer">
                     <div class="w-12 h-12 rounded-full border-2 border-blue-500 overflow-hidden">
-                        <img  src="${minidata.photo}" alt="${minidata.nom}" class="afficheimg w-full h-full object-cover">
+                        <img src="${minidata.photo}" alt="${minidata.nom}" class="afficheimg w-full h-full object-cover">
                     </div>
                     <div class="flex-1">
-                        <h2  class="affichenom font-bold">${minidata.nom}</h2>
-                        <p  class="textRole text-gray-500">${minidata.role}</p>
+                        <h2 class="affichenom font-bold">${minidata.nom}</h2>
+                        <p class="textRole text-gray-500">${minidata.role}</p>
                     </div>
                     <div>
-                        <button class="text-yellow-500 font-bold hover:text-yellow-600">Edit</button>
+                        <button class="editBtn text-yellow-500 font-bold hover:text-yellow-600">Edit</button>
                     </div>
                 </div>
             `;
-            // countourId++;
-            openAfficheModal()
         });
+
+        // Appliquer le filtre d'affichage
+        displaySidbar();
+        // Réattacher les événements
+        openAfficheModal();
+        
     } else {
         placeTache.innerHTML = `
             <div class="text-center p-4 text-gray-500">
@@ -177,41 +173,33 @@ function getData() {
             </div>
         `;
     }
-
 }
-// ===================================================================================================
-
 
 // ======================= clear all input after click sur save =================================================
 function clearInputs() {
     document.getElementById("name").value = "";
     document.getElementById("role").value = "";
     document.getElementById("photo").value = "";
-    document.getElementById("company").value = "";
-    document.getElementById("roleExperience").value = "";
-    document.getElementById("from").value = "";
-    document.getElementById("to").value = "";
     document.getElementById("email").value = "";
     document.getElementById("phone").value = "";
     document.getElementById("imageView").src = "";
+    
+    // Vider aussi les expériences
+    placeExperience.innerHTML = "";
+    
     informations.style.display = "none"
 }
-
-// getData();
 
 function formValidation() {
     const inputs = [
         document.getElementById("name"),
         document.getElementById("role"),
         document.getElementById("photo"),
-        document.getElementById("company"),
-        document.getElementById("roleExperience"),
         document.getElementById("email"),
         document.getElementById("phone")
     ];
 
     for (let input of inputs) {
-
         if (!validationRegexInput(input)) {
             return false;
         }
@@ -219,9 +207,7 @@ function formValidation() {
     return true;
 }
 
-
 function validationRegexInput(input) {
-
     const inputId = input.id;
     for (const valid of validationRegex) {
         if (valid.id === inputId) {
@@ -237,53 +223,41 @@ function validationRegexInput(input) {
     }
     return true;
 }
+
 function creatElxperienceItem() {
     placeExperience.innerHTML += `
          <div class="boxInputExperience">
-                        <div class="boxInput">
-                            <label for="Company">Company :</label>
-                            <br>
-                            <input type="text" class ="inputexper" id="company">
-                            <span class="showError"></span></span>
-                        </div>
-
-                        <div class="boxInput">
-                            <label for="Role">Role :</label>
-                            <br>
-                            <input type="text" class ="inputexper" id="roleExperience">
-                            <span class="showError"></span></span>
-                        </div>
-
-                        <div class="boxInput">
-                            <label for="from">From :</label>
-                            <br>
-                            <input type="date" class ="inputexper" id="from">
-                            <span class="showError"></span></span>
-                        </div>
-
-                        <div class="boxInput">
-                            <label for="to">To :</label>
-                            <br>
-                            <input type="date" class ="inputexper" id="to">
-                            <span class="showError"></span></span>
-                        </div>
-
-
-                    </div>
-                    
+            <div class="boxInput">
+                <label for="Company">Company :</label>
+                <br>
+                <input type="text" class="inputexper" id="company">
+                <span class="showError"></span>
+            </div>
+            <div class="boxInput">
+                <label for="Role">Role :</label>
+                <br>
+                <input type="text" class="inputexper" id="roleExperience">
+                <span class="showError"></span>
+            </div>
+            <div class="boxInput">
+                <label for="from">From :</label>
+                <br>
+                <input type="date" class="inputexper" id="from">
+                <span class="showError"></span>
+            </div>
+            <div class="boxInput">
+                <label for="to">To :</label>
+                <br>
+                <input type="date" class="inputexper" id="to">
+                <span class="showError"></span>
+            </div>
+        </div>
     `;
-
-
 }
-function inputexpervalue() {
-    // debugger;
-    const inputexper = document.querySelectorAll(".inputexper");
-    console.log(`Number of experience inputs: ${inputexper.length}`);
 
+function inputexpervalue() {
     const experienceContainers = document.querySelectorAll(".boxInputExperience");
     const experiences = [];
-
-
 
     experienceContainers.forEach(container => {
         const company = container.querySelector("#company")?.value || "";
@@ -291,13 +265,7 @@ function inputexpervalue() {
         const from = container.querySelector("#from")?.value || "";
         const to = container.querySelector("#to")?.value || "";
 
-        // const companyOrigin = container.querySelector(".companyOrigin")?.value || "";
-        // const roleOrigin = container.querySelector(".roleOrigin")?.value || "";
-        // const fromOrigin = container.querySelector(".fromOrigin")?.value || "";
-        // const toOrigin = container.querySelector(".toOrigin")?.value || "";
-
         if (company || roleExperience || from || to) {
-
             experiences.push({
                 company: company,
                 roleExperience: roleExperience,
@@ -307,74 +275,76 @@ function inputexpervalue() {
         }
     });
 
-    console.log("Experiences:", experiences);
-    console.log(datalist[datalist.length - 1])
-
-    // // Add experiences to the last worker in datalist
-    // if (datalist.length > 0 && experiences.length > 0) {
-    //     // datalist[datalist.length].experience.push(experiences) ;
-    //     // localStorage.setItem("Data", JSON.stringify(datalist));
-    //     SetData(experiences)
-    // }
     return experiences;
 }
 
 function afficheData(dataaffiche) {
+    const affichName = document.getElementById("affichName");
+    const afficheImgView = document.getElementById("afficheImgView");
+    const AfficheRole = document.getElementById("AfficheRole");
+    const AfficheEmail = document.getElementById("AfficheEmail");
+    const AffichePhone = document.getElementById("AffichePhone");
 
-    const data = JSON.parse(localStorage.getItem("Data")) || [];
-    const affichName = document.getElementById("affichName").textContent = `${dataaffiche.nom}`
-    const afficheImgView = document.getElementById("afficheImgView").src = `${dataaffiche.photo}`
-    const AfficheRole = document.getElementById("AfficheRole").textContent = `${dataaffiche.role}`
-    const AfficheEmail = document.getElementById("AfficheEmail").textContent = `${dataaffiche.email}`
-    const AffichePhone = document.getElementById("AffichePhone").textContent = `${dataaffiche.phone}`
-    // const AfficheLocation = document.getElementById("AfficheLocation").textContent = `${dataaffiche.location}`
+    if (affichName) affichName.textContent = dataaffiche.nom;
+    if (afficheImgView) afficheImgView.src = dataaffiche.photo;
+    if (AfficheRole) AfficheRole.textContent = dataaffiche.role;
+    if (AfficheEmail) AfficheEmail.textContent = dataaffiche.email;
+    if (AffichePhone) AffichePhone.textContent = dataaffiche.phone;
 
-    dataaffiche.experience.forEach((exp) => {
-        boxWorkExperiece.innerHTML += `
-            <div class="w-full border-2 border-gray-200 p-4 rounded-lg">
-                                <h2 class="font-bold mb-5 text-blue-500 text-2xl" id="AfficheCompany">${exp.company}</h2>
-                                <div class="w-full flex gap-2 rounded-lg">
-                                    <h3 class="font-bold mb-3">Role :</h3>
-                                    <p id="AfficheRoleExper">${exp.roleExperience}</p>
-                                </div>
-                                <div class="w-full flex gap-2 rounded-lg">
-                                    <h3 class="font-bold">Period :</h3>
-                                    <p ><span id="AfficheFrom">${exp.from}</span>  - <span id="AfficheTo">${exp.to}</span> </p>
-                                </div>
-                            </div>
-        `
+    // Vider les expériences précédentes
+    boxWorkExperiece.innerHTML = "";
 
-    });
-    manageAfficheModal.style.display = "flex"
-    modalCloseBtnAffichage.addEventListener("click", () => {
-        manageAfficheModal.style.display = "none"
-        boxWorkExperiece.innerHTML = ""
-    });
+    if (dataaffiche.experience && Array.isArray(dataaffiche.experience)) {
+        dataaffiche.experience.forEach((exp) => {
+            boxWorkExperiece.innerHTML += `
+                <div class="w-full border-2 border-gray-200 p-4 rounded-lg">
+                    <h2 class="font-bold mb-5 text-blue-500 text-2xl">${exp.company}</h2>
+                    <div class="w-full flex gap-2 rounded-lg">
+                        <h3 class="font-bold mb-3">Role :</h3>
+                        <p>${exp.roleExperience}</p>
+                    </div>
+                    <div class="w-full flex gap-2 rounded-lg">
+                        <h3 class="font-bold">Period :</h3>
+                        <p><span>${exp.from}</span> - <span>${exp.to}</span></p>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    manageAfficheModal.style.display = "flex";
 }
+
 function clearAllEmployerbtn(){
-    clearAllEmployer.addEventListener("click", ()=>{
-        localStorage.clear()
-        location.reload(true)
-    })
+    clearAllEmployer.addEventListener("click", () => {
+        localStorage.clear();
+        datalist = [];
+        location.reload();
+    });
 }
+
 function openAfficheModal() {
     const afficheDataBtn = document.querySelectorAll(".cards");
-
-    let datalist = JSON.parse(localStorage.getItem("Data")) || [];
+    const datalist = JSON.parse(localStorage.getItem("Data")) || [];
 
     afficheDataBtn.forEach(btn => {
+        // Supprimer les anciens événements pour éviter les duplicates
+        btn.replaceWith(btn.cloneNode(true));
+    });
+
+    // Réattacher les événements
+    document.querySelectorAll(".cards").forEach(btn => {
         btn.addEventListener("click", () => {
-            const btnClicked = datalist[btn.getAttribute("id-coutor")]
-            console.log(btnClicked);
-            afficheData(btnClicked)
-            
-
-        })
-    })
-
+            const index = btn.getAttribute("id-coutor");
+            const btnClicked = datalist[index];
+            if (btnClicked) {
+                afficheData(btnClicked);
+            }
+        });
+    });
 }
 
-
+// ==================== FONCTIONS DE FILTRAGE ET PLACEMENT ====================
 let placedEmployees = [];
 
 function affichageFilter() {
@@ -391,115 +361,112 @@ function affichageFilter() {
         btn.addEventListener("click", () => {
             const room = btn.getAttribute("name-rooms");
             const allowedRoles = roomsRoles[room];
-            console.log(`this is ${allowedRoles}`)
-            FiltrageEmplyer.innerHTML = ""
+            
+            placedEmployees = placedEmployees.filter(emp => emp.room === room);
+            FiltrageEmplyer.innerHTML = "";
+            
             if (allowedRoles) {
-                 filterEmployersRole(allowedRoles, btn)
+                filterEmployersRole(allowedRoles, btn);
             }
         });
     });
 }
 
 function filterEmployersRole(allowedRoles, btn){
-    const afficheDataBtn = document.querySelectorAll(".cards");
+    const data = JSON.parse(localStorage.getItem("Data")) || [];
+    FiltrageEmplyer.innerHTML = "";
+
+    data.forEach((minidata, index) => {
+        if(minidata.isAsind === false && allowedRoles.includes(minidata.role)){
+            FiltrageEmplyer.innerHTML += `
+                <div id-coutor="${index}" class="cardsfilter w-[95%] h-20 bg-gray-200 border-2 border-gray-200 rounded-2xl flex items-center p-2 gap-2 mb-2 cursor-pointer">
+                    <div class="w-12 h-12 rounded-full border-2 border-blue-500 overflow-hidden">
+                        <img src="${minidata.photo}" alt="${minidata.nom}" class="afficheimg w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1">
+                        <h2 class="affichenom font-bold">${minidata.nom}</h2>
+                        <p class="textRole text-gray-500">${minidata.role}</p>
+                    </div>
+                </div>
+            `;
+        }
+    });
+
+    attachFilterEvents(allowedRoles, btn);
+}
+function attachFilterEvents(allowedRoles, btn) {
+    const cardsfilter = document.querySelectorAll(".cardsfilter");
+    const data = JSON.parse(localStorage.getItem("Data")) || [];
+    const placedeplacement = btn.parentElement.parentElement.firstElementChild;
+
+    cardsfilter.forEach((card) => {
+        card.addEventListener("click", () => {
+            const index = card.getAttribute("id-coutor");
+            const minidata = data[index];
+            
+            if (minidata && !minidata.isAsind) {
+                minidata.isAsind = true;
+                placedeplacement.innerHTML += `
+                    <div id-coutor="${index}" class="placed-employee w-30 bg-gray-200 border-2 border-gray-200 rounded-2xl flex flex-col items-center p-2 gap-2 mb-2">
+                        <div class="w-10 h-10 rounded-full border-2 border-blue-500 overflow-hidden">
+                            <img src="${minidata.photo}" alt="${minidata.nom}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1">
+                            <h2 class="font-bold text-sm">${minidata.nom}</h2>
+                            <p class="textRole text-gray-500 text-xs">${minidata.role}</p>
+                        </div>
+                    </div>
+                `;
+                
+                localStorage.setItem("Data", JSON.stringify(data));
+                card.remove(); // Retirer complètement au lieu de cacher
+                displaySidbar();
+            }else{
+                alert("lah ij3el xi baraka")
+            }
+        });
+    });
+}
+
+function displaySidbar() {
+    const data = JSON.parse(localStorage.getItem("Data")) || [];
+    const cards = document.querySelectorAll("#placeTache .cards");
     
-    afficheDataBtn.forEach(card =>{
-        const employeeId = card.getAttribute("id-coutor");
-        const isAlreadyPlaced = placedEmployees.some(emp => emp.id === employeeId);
-        
-        if(!isAlreadyPlaced && allowedRoles.includes(card.querySelector(".textRole").textContent)){
-            const cardClone = card.cloneNode(true); 
-            
-            cardClone.addEventListener("click", () => {
-                if(!placedEmployees.some(emp => emp.id === employeeId)) {
-                    placedEmployees.push({
-                        id: employeeId,
-                        element: cardClone,
-                        room: btn.getAttribute("name-rooms")
-                    });
-                    
-                    deplacementEmplyer(btn, employeeId);
-                    
-                    cardClone.remove();
-                }
-            });
-            
-            FiltrageEmplyer.appendChild(cardClone); 
+    cards.forEach(card => {
+        const index = card.getAttribute("id-coutor");
+        if (data[index] && data[index].isAsind === true) {
+            card.style.display = "none";
+        } else {
+            card.style.display = "flex";
         }
     });
 }
 
-function deplacementEmplyer(btn, employeeId){
-    const placedeplacement = btn.parentElement.parentElement.firstElementChild;
+// ==================== FONCTION DE RETOUR DES EMPLOYÉS ====================
+function returnAllEmployees() {
+    const data = JSON.parse(localStorage.getItem("Data")) || [];
     
-   
-    const employee = placedEmployees.find(emp => emp.id === employeeId);
+    // Réinitialiser tous les statuts
+    data.forEach(employee => {
+        employee.isAsind = false;
+    });
     
-    if(employee) {
-        
-
-        placedeplacement.innerHTML += `
-            <div id-coutor="${employee.element.getAttribute("id-coutor")}" class="cards deplaceemployer w-30  bg-gray-200 border-2 border-gray-200 rounded-2xl flex flex-col items-center p-2 gap-2 mb-2">
-                     <div class="w-10 h-10 rounded-full border-2 border-blue-500 overflow-hidden">
-                         <img src="${employee.element.querySelector(".afficheimg").src}" alt="" class="w-full h-full object-cover">
-                     </div>
-                     <div class="flex-1">
-                         <h2 class="font-bold">${employee.element.querySelector(".affichenom").textContent}</h2>
-                         <p  class="textRole text-gray-500">${employee.element.querySelector(".textRole").textContent}</p>
-                     </div>
-                 </div>
-        `
-        
-        console.log(employee.element)
-        
-    }
+    // Sauvegarder
+    localStorage.setItem("Data", JSON.stringify(data));
+    
+    // Vider toutes les salles
+    document.querySelectorAll('[name-rooms]').forEach(btn => {
+        const placedeplacement = btn.parentElement.parentElement.firstElementChild;
+        if (placedeplacement) {
+            placedeplacement.innerHTML = '';
+        }
+    });
+    
+    // Rafraîchir l'affichage
+    getData();
+    
+    console.log("Tous les employés sont retournés à leur place initiale");
 }
 
-
-
-
-// // ================= active la deplacement des employer ===============
-// function deplacementEmplyer(filteredEmployees,btn,databtn){
-//     const deplaceemployer = document.querySelectorAll(".deplaceemployer")
-//     deplaceemployer.forEach(employer =>{
-//         employer.addEventListener("click",()=>{
-//             employer.style.display = "none"
-//             const element = employer.getAttribute("id-coutor")
-//             // console.log(element)
-//             filteredEmployees.forEach(comp =>{
-//                 if(comp.index == element){
-//                     const boxdeplacer = comp
-//                     console.log(comp.element)
-//                     affichedeplacement(boxdeplacer , btn,databtn)
-//                 }
-//             })
-
-//         })
-//     })
-
-// }
-
-// // =================== affiche la deplacement ===================
-// function affichedeplacement(boxdeplacer,btn,databtn){
-//     const placedeplacement = btn.parentElement.parentElement.firstElementChild
-    
-//     placedeplacement.innerHTML += `
-//         <div id-coutor="${boxdeplacer.element.getAttribute("index")}" class="cards deplaceemployer w-30  bg-gray-200 border-2 border-gray-200 rounded-2xl flex flex-col items-center p-2 gap-2 mb-2">
-//                     <div class="w-10 h-10 rounded-full border-2 border-blue-500 overflow-hidden">
-//                         <img src="${boxdeplacer.element.querySelector(".afficheimg").src}" alt="" class="w-full h-full object-cover">
-//                     </div>
-//                     <div class="flex-1">
-//                         <h2 class="font-bold">${boxdeplacer.element.querySelector(".affichenom").textContent}</h2>
-//                         <p  class="textRole text-gray-500">${boxdeplacer.element.querySelector(".textRole").textContent}</p>
-//                     </div>
-//                 </div>
-//     `
-    
-//     const cards = placeTache.querySelectorAll(".cards")
-//     cards.forEach((card,index)=>{
-//         if(index === boxdeplacer.index){
-//             boxdeplacer.element.style.display = "none"
-//         }
-//     })
-
-// }
+// Ajouter un bouton de retour dans votre HTML
+// <button onclick="returnAllEmployees()" class="bg-blue-500 text-white p-2 rounded">Retourner tous les employés</button>
