@@ -62,16 +62,20 @@ document.addEventListener("DOMContentLoaded", (event) => {
     clearAllEmployerbtn();
     getData();
     affichageFilter();
+    modalClose.addEventListener("click", () => {
+    informations.style.display = "none"
+    
+})
 })
 
 // ===================== addevent listiner =========================================
 addNewJobBtn.addEventListener("click", () => {
-    informations.style.display = "flex"
+    currentEditIndex = null; // Réinitialiser pour mode ajout
+    saveWorker.textContent = "Sauvegarder";
+    informations.style.display = "flex";
 })
 
-modalClose.addEventListener("click", () => {
-    informations.style.display = "none"
-})
+
 
 btnAdd.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -79,14 +83,12 @@ btnAdd.forEach(btn => {
     })
 })
 
-modalCloseBtnManageTache.addEventListener("click", () => {
-    manageJobModalTache.style.display = "none"
+modalClose.addEventListener("click", () => {
+    informations.style.display = "none";
+    cancelEdit(); // ← AJOUTER ICI
 })
 
-saveWorker.addEventListener("click", (e) => {
-    e.preventDefault()
-    SetData()
-})
+saveWorker.addEventListener("click", handleSaveWorker); // ← CHANGER ICI
 
 document.getElementById("photo").addEventListener("input", () => {
     document.getElementById("imageView").src = document.getElementById("photo").value
@@ -97,15 +99,10 @@ addExperience.addEventListener("click", (e) => {
     creatElxperienceItem()
 })
 
-//====================================================================================
-function dataglobale(){
-    const data = JSON.parse(localStorage.getItem("Data")) || [];
-    return data;
-}
+
 
 // ========================== stocke les dataes dans localeStorage =====================
 function SetData() {
-    // Récupérer d'abord les données existantes
     datalist = JSON.parse(localStorage.getItem("Data")) || [];
     
     const name = document.getElementById("name").value;
@@ -144,7 +141,6 @@ function getData() {
         placeTache.innerHTML = "";
 
         data.forEach((minidata, index) => {
-            // Afficher TOUS les employés, mais gérer l'affichage avec displaySidbar()
             placeTache.innerHTML += `
                 <div id-coutor="${index}" class="cards w-[95%] h-20 bg-gray-200 border-2 border-gray-200 rounded-2xl flex items-center p-2 gap-2 mb-2 cursor-pointer">
                     <div class="w-12 h-12 rounded-full border-2 border-blue-500 overflow-hidden">
@@ -161,10 +157,9 @@ function getData() {
             `;
         });
 
-        // Appliquer le filtre d'affichage
         displaySidbar();
-        // Réattacher les événements
         openAfficheModal();
+        attachEditEvents(); // ← AJOUTER ICI
         
     } else {
         placeTache.innerHTML = `
@@ -174,7 +169,7 @@ function getData() {
         `;
     }
 }
-
+// ======================= clear all input after click sur save =================================================
 // ======================= clear all input after click sur save =================================================
 function clearInputs() {
     document.getElementById("name").value = "";
@@ -184,10 +179,13 @@ function clearInputs() {
     document.getElementById("phone").value = "";
     document.getElementById("imageView").src = "";
     
-    // Vider aussi les expériences
     placeExperience.innerHTML = "";
     
-    informations.style.display = "none"
+    informations.style.display = "none";
+    
+    // Réinitialiser pour mode ajout
+    currentEditIndex = null;
+    saveWorker.textContent = "Sauvegarder";
 }
 
 function formValidation() {
@@ -291,7 +289,6 @@ function afficheData(dataaffiche) {
     if (AfficheEmail) AfficheEmail.textContent = dataaffiche.email;
     if (AffichePhone) AffichePhone.textContent = dataaffiche.phone;
 
-    // Vider les expériences précédentes
     boxWorkExperiece.innerHTML = "";
 
     if (dataaffiche.experience && Array.isArray(dataaffiche.experience)) {
@@ -328,11 +325,9 @@ function openAfficheModal() {
     const datalist = JSON.parse(localStorage.getItem("Data")) || [];
 
     afficheDataBtn.forEach(btn => {
-        // Supprimer les anciens événements pour éviter les duplicates
         btn.replaceWith(btn.cloneNode(true));
     });
 
-    // Réattacher les événements
     document.querySelectorAll(".cards").forEach(btn => {
         btn.addEventListener("click", () => {
             const index = btn.getAttribute("id-coutor");
@@ -419,7 +414,7 @@ function attachFilterEvents(allowedRoles, btn) {
                 `;
                 
                 localStorage.setItem("Data", JSON.stringify(data));
-                card.remove(); // Retirer complètement au lieu de cacher
+                card.remove(); 
                 displaySidbar();
             }else{
                 alert("lah ij3el xi baraka")
@@ -446,15 +441,12 @@ function displaySidbar() {
 function returnAllEmployees() {
     const data = JSON.parse(localStorage.getItem("Data")) || [];
     
-    // Réinitialiser tous les statuts
     data.forEach(employee => {
         employee.isAsind = false;
     });
     
-    // Sauvegarder
     localStorage.setItem("Data", JSON.stringify(data));
     
-    // Vider toutes les salles
     document.querySelectorAll('[name-rooms]').forEach(btn => {
         const placedeplacement = btn.parentElement.parentElement.firstElementChild;
         if (placedeplacement) {
@@ -462,11 +454,128 @@ function returnAllEmployees() {
         }
     });
     
-    // Rafraîchir l'affichage
     getData();
     
     console.log("Tous les employés sont retournés à leur place initiale");
 }
 
-// Ajouter un bouton de retour dans votre HTML
-// <button onclick="returnAllEmployees()" class="bg-blue-500 text-white p-2 rounded">Retourner tous les employés</button>
+// ==================== FONCTIONS DE MODIFICATION ====================
+
+let currentEditIndex = null;
+
+function openEditForm(index) {
+    const data = JSON.parse(localStorage.getItem("Data")) || [];
+    const employee = data[index];
+    
+    if (!employee) return;
+    
+    currentEditIndex = index;
+    
+    document.getElementById("name").value = employee.nom || "";
+    document.getElementById("role").value = employee.role || "";
+    document.getElementById("photo").value = employee.photo || "";
+    document.getElementById("email").value = employee.email || "";
+    document.getElementById("phone").value = employee.phone || "";
+    document.getElementById("imageView").src = employee.photo || "";
+    
+    placeExperience.innerHTML = "";
+    if (employee.experience && Array.isArray(employee.experience)) {
+        employee.experience.forEach(exp => {
+            placeExperience.innerHTML += `
+                <div class="boxInputExperience">
+                    <div class="boxInput">
+                        <label for="Company">Company :</label>
+                        <br>
+                        <input type="text" class="inputexper" id="company" value="${exp.company || ""}">
+                        <span class="showError"></span>
+                    </div>
+                    <div class="boxInput">
+                        <label for="Role">Role :</label>
+                        <br>
+                        <input type="text" class="inputexper" id="roleExperience" value="${exp.roleExperience || ""}">
+                        <span class="showError"></span>
+                    </div>
+                    <div class="boxInput">
+                        <label for="from">From :</label>
+                        <br>
+                        <input type="date" class="inputexper" id="from" value="${exp.from || ""}">
+                        <span class="showError"></span>
+                    </div>
+                    <div class="boxInput">
+                        <label for="to">To :</label>
+                        <br>
+                        <input type="date" class="inputexper" id="to" value="${exp.to || ""}">
+                        <span class="showError"></span>
+                    </div>
+                </div>
+            `;
+        });
+    }
+    
+    informations.style.display = "flex";
+    
+    saveWorker.textContent = "Modifier";
+}
+
+function updateEmployee() {
+    if (currentEditIndex === null) return;
+    
+    const data = JSON.parse(localStorage.getItem("Data")) || [];
+    
+    if (!data[currentEditIndex]) {
+        alert("Employé non trouvé!");
+        return;
+    }
+    
+    if (!formValidation()) {
+        return;
+    }
+    
+    data[currentEditIndex] = {
+        isAsind: data[currentEditIndex].isAsind, 
+        nom: document.getElementById("name").value,
+        role: document.getElementById("role").value,
+        photo: document.getElementById("photo").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        experience: inputexpervalue()
+    };
+    
+    localStorage.setItem("Data", JSON.stringify(data));
+    
+    getData();
+    
+    cancelEdit();
+    
+    alert("Employé modifié avec succès!");
+}
+
+function cancelEdit() {
+    currentEditIndex = null;
+    clearInputs();
+}
+
+function attachEditEvents() {
+    const editButtons = document.querySelectorAll(".editBtn");
+    
+    editButtons.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            
+            const card = btn.closest(".cards");
+            const index = card.getAttribute("id-coutor");
+            
+            openEditForm(parseInt(index));
+        });
+    });
+}
+
+function handleSaveWorker(e) {
+    e.preventDefault();
+    
+    if (currentEditIndex !== null) {
+        updateEmployee();
+    } else {
+        SetData();
+    }
+}
