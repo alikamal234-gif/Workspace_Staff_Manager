@@ -14,8 +14,10 @@ const boxWorkExperiece = document.getElementById("boxWorkExperiece")
 const modalCloseBtnAffichage = document.getElementById("modal-close-btn-affichage")
 const modalContentTache = document.querySelector(".modal-content-tache")
 const FiltrageEmplyer = document.getElementById("FiltrageEmplyer")
+const clearAllEmployer = document.getElementById("clearAllEmployer")
 
-let countourId = 0;
+//================= les objects de validation rejex =====================================
+// const countourId = 0
 const validationRegex = [
     {
         id: "name",
@@ -53,18 +55,21 @@ const validationRegex = [
         message: "Le rôle doit contenir uniquement des lettres (2-30 caractères)"
     }
 ];
-
+// ==============================================================================
+clearAllEmployerbtn()
 document.addEventListener("DOMContentLoaded", (event) => {
     getData();
     // filteremplyers()
     affichageFilter()
     // openAfficheModal()
+    
 
 })
-// les données delocalStorage
+//===================== les données delocalStorage =======================
 let datalist = JSON.parse(localStorage.getItem("Data")) || [];
 console.log(datalist);
 
+// ===================== addevent listiner =========================================
 addNewJobBtn.addEventListener("click", () => {
     informations.style.display = "flex"
 })
@@ -80,6 +85,7 @@ btnAdd.forEach(btn => {
 modalCloseBtnManageTache.addEventListener("click", () => {
     manageJobModalTache.style.display = "none"
 })
+
 saveWorker.addEventListener("click", (e) => {
     e.preventDefault()
     SetData()
@@ -93,16 +99,17 @@ addExperience.addEventListener("click", (e) => {
     creatElxperienceItem()
 
 })
-
+//====================================================================================
+function dataglobale(){
+    const data = JSON.parse(localStorage.getItem("Data")) || [];
+    return data;
+}
+// ========================== stocke les dataes dans localeStorage =====================
 function SetData() {
     // debugger;
     const name = document.getElementById("name").value;
     const role = document.getElementById("role").value;
     const photo = document.getElementById("photo").value;
-    // const minicompany = document.getElementById("company").value;
-    // const miniroleExperience = document.getElementById("roleExperience").value;
-    // const minifrom = document.getElementById("from").value;
-    // const minito = document.getElementById("to").value;
     const email = document.getElementById("email").value;
     const phone = document.getElementById("phone").value;
 
@@ -129,6 +136,11 @@ function SetData() {
     clearInputs();
 }
 
+// ==================================================================================================
+
+
+// ========================== get data from localeStorage et afficher dans le sidebar ==============================
+
 function getData() {
     const data = JSON.parse(localStorage.getItem("Data")) || [];
 
@@ -142,7 +154,7 @@ function getData() {
 
         data.forEach((minidata, index, array) => {
             placeTache.innerHTML += `
-                <div id-coutor="${index}" class="cards w-[95%] h-20 bg-gray-200 border-2 border-gray-200 rounded-2xl flex items-center p-2 gap-2 mb-2">
+                <div id-coutor="${index}" class="cards w-[95%] h-20 bg-gray-200 border-2 border-gray-200 rounded-2xl flex items-center p-2 gap-2 mb-2 cursor-pointer">
                     <div class="w-12 h-12 rounded-full border-2 border-blue-500 overflow-hidden">
                         <img  src="${minidata.photo}" alt="${minidata.nom}" class="afficheimg w-full h-full object-cover">
                     </div>
@@ -155,7 +167,7 @@ function getData() {
                     </div>
                 </div>
             `;
-            countourId++;
+            // countourId++;
             openAfficheModal()
         });
     } else {
@@ -167,7 +179,10 @@ function getData() {
     }
 
 }
+// ===================================================================================================
 
+
+// ======================= clear all input after click sur save =================================================
 function clearInputs() {
     document.getElementById("name").value = "";
     document.getElementById("role").value = "";
@@ -178,8 +193,8 @@ function clearInputs() {
     document.getElementById("to").value = "";
     document.getElementById("email").value = "";
     document.getElementById("phone").value = "";
-
     document.getElementById("imageView").src = "";
+    informations.style.display = "none"
 }
 
 // getData();
@@ -312,7 +327,7 @@ function afficheData(dataaffiche) {
     const AfficheRole = document.getElementById("AfficheRole").textContent = `${dataaffiche.role}`
     const AfficheEmail = document.getElementById("AfficheEmail").textContent = `${dataaffiche.email}`
     const AffichePhone = document.getElementById("AffichePhone").textContent = `${dataaffiche.phone}`
-    const AfficheLocation = document.getElementById("AfficheLocation").textContent = `${dataaffiche.location}`
+    // const AfficheLocation = document.getElementById("AfficheLocation").textContent = `${dataaffiche.location}`
 
     dataaffiche.experience.forEach((exp) => {
         boxWorkExperiece.innerHTML += `
@@ -336,6 +351,12 @@ function afficheData(dataaffiche) {
         boxWorkExperiece.innerHTML = ""
     });
 }
+function clearAllEmployerbtn(){
+    clearAllEmployer.addEventListener("click", ()=>{
+        localStorage.clear()
+        location.reload(true)
+    })
+}
 function openAfficheModal() {
     const afficheDataBtn = document.querySelectorAll(".cards");
 
@@ -353,15 +374,15 @@ function openAfficheModal() {
 
 }
 
-// localStorage.removeItem("Data")
 
-// affichageFilter()
+let placedEmployees = [];
+
 function affichageFilter() {
     const roomsRoles = {
         conférence: ["Nettoyage", "Manager", "Other"],
         serveurs: ["Techniciens IT", "Manager", "Nettoyage"],
         sécurité: ["Agents de sécurité", "Manager", "Nettoyage"],
-        Réception: ["Receptionniste", "Nettoyage", "Manager"],
+        Réception: ["Réceptionniste", "Nettoyage", "Manager"],
         personnel: ["Nettoyage", "Manager", "Other"],
         archives: ["Manager", "Other"]
     };
@@ -370,59 +391,115 @@ function affichageFilter() {
         btn.addEventListener("click", () => {
             const room = btn.getAttribute("name-rooms");
             const allowedRoles = roomsRoles[room];
+            console.log(`this is ${allowedRoles}`)
             FiltrageEmplyer.innerHTML = ""
             if (allowedRoles) {
-                filterEmployersRole(allowedRoles, room);
+                 filterEmployersRole(allowedRoles, btn)
             }
         });
     });
 }
 
-function filterEmployersRole(allowedRoles, roomName) {
+function filterEmployersRole(allowedRoles, btn){
     const afficheDataBtn = document.querySelectorAll(".cards");
-    const filteredEmployees = [];
-
-    afficheDataBtn.forEach((databtn, index) => {
-        const roleElement = databtn.querySelector(".textRole");
-        const employeeRole = roleElement ? roleElement.textContent : "";
+    
+    afficheDataBtn.forEach(card =>{
+        const employeeId = card.getAttribute("id-coutor");
+        const isAlreadyPlaced = placedEmployees.some(emp => emp.id === employeeId);
         
-        // Vérifier si le rôle de l'employé est autorisé pour cette pièce
-        const isAllowed = allowedRoles.includes(employeeRole);
-        
-        if (isAllowed) {
-            filteredEmployees.push({
-                element: databtn,
-                role: employeeRole,
-                index: index
-            });
-            console.log(databtn)
-            FiltrageEmplyer.innerHTML += `
-                <div id-coutor="${index}" class="cards w-[95%] h-20 bg-gray-200 border-2 border-gray-200 rounded-2xl flex items-center p-2 gap-2 mb-2">
-                    <div class="w-12 h-12 rounded-full border-2 border-blue-500 overflow-hidden">
-                        <img src="${databtn.querySelector(".afficheimg").src}" alt="" class="w-full h-full object-cover">
-                    </div>
-                    <div class="flex-1">
-                        <h2 class="font-bold">${databtn.querySelector(".affichenom").textContent}</h2>
-                        <p  class="textRole text-gray-500">${databtn.querySelector(".textRole").textContent}</p>
-                    </div>
-                    
-                </div>
-            `;
+        if(!isAlreadyPlaced && allowedRoles.includes(card.querySelector(".textRole").textContent)){
+            const cardClone = card.cloneNode(true); 
             
-        } else {
-            FiltrageEmplyer.innerHTML += ""
+            cardClone.addEventListener("click", () => {
+                if(!placedEmployees.some(emp => emp.id === employeeId)) {
+                    placedEmployees.push({
+                        id: employeeId,
+                        element: cardClone,
+                        room: btn.getAttribute("name-rooms")
+                    });
+                    
+                    deplacementEmplyer(btn, employeeId);
+                    
+                    cardClone.remove();
+                }
+            });
+            
+            FiltrageEmplyer.appendChild(cardClone); 
         }
     });
-
-    console.log(`Employés autorisés pour ${roomName}:`, filteredEmployees);
-    return filteredEmployees;
 }
 
-// Remplacer filteremplyers() par cette fonction utilitaire
-function showAllEmployees() {
-    const afficheDataBtn = document.querySelectorAll(".cards");
-    afficheDataBtn.forEach(databtn => {
-        databtn.style.display = "flex";
-    });
+function deplacementEmplyer(btn, employeeId){
+    const placedeplacement = btn.parentElement.parentElement.firstElementChild;
+    
+   
+    const employee = placedEmployees.find(emp => emp.id === employeeId);
+    
+    if(employee) {
+        
+
+        placedeplacement.innerHTML += `
+            <div id-coutor="${employee.element.getAttribute("id-coutor")}" class="cards deplaceemployer w-30  bg-gray-200 border-2 border-gray-200 rounded-2xl flex flex-col items-center p-2 gap-2 mb-2">
+                     <div class="w-10 h-10 rounded-full border-2 border-blue-500 overflow-hidden">
+                         <img src="${employee.element.querySelector(".afficheimg").src}" alt="" class="w-full h-full object-cover">
+                     </div>
+                     <div class="flex-1">
+                         <h2 class="font-bold">${employee.element.querySelector(".affichenom").textContent}</h2>
+                         <p  class="textRole text-gray-500">${employee.element.querySelector(".textRole").textContent}</p>
+                     </div>
+                 </div>
+        `
+        
+        console.log(employee.element)
+        
+    }
 }
 
+
+
+
+// // ================= active la deplacement des employer ===============
+// function deplacementEmplyer(filteredEmployees,btn,databtn){
+//     const deplaceemployer = document.querySelectorAll(".deplaceemployer")
+//     deplaceemployer.forEach(employer =>{
+//         employer.addEventListener("click",()=>{
+//             employer.style.display = "none"
+//             const element = employer.getAttribute("id-coutor")
+//             // console.log(element)
+//             filteredEmployees.forEach(comp =>{
+//                 if(comp.index == element){
+//                     const boxdeplacer = comp
+//                     console.log(comp.element)
+//                     affichedeplacement(boxdeplacer , btn,databtn)
+//                 }
+//             })
+
+//         })
+//     })
+
+// }
+
+// // =================== affiche la deplacement ===================
+// function affichedeplacement(boxdeplacer,btn,databtn){
+//     const placedeplacement = btn.parentElement.parentElement.firstElementChild
+    
+//     placedeplacement.innerHTML += `
+//         <div id-coutor="${boxdeplacer.element.getAttribute("index")}" class="cards deplaceemployer w-30  bg-gray-200 border-2 border-gray-200 rounded-2xl flex flex-col items-center p-2 gap-2 mb-2">
+//                     <div class="w-10 h-10 rounded-full border-2 border-blue-500 overflow-hidden">
+//                         <img src="${boxdeplacer.element.querySelector(".afficheimg").src}" alt="" class="w-full h-full object-cover">
+//                     </div>
+//                     <div class="flex-1">
+//                         <h2 class="font-bold">${boxdeplacer.element.querySelector(".affichenom").textContent}</h2>
+//                         <p  class="textRole text-gray-500">${boxdeplacer.element.querySelector(".textRole").textContent}</p>
+//                     </div>
+//                 </div>
+//     `
+    
+//     const cards = placeTache.querySelectorAll(".cards")
+//     cards.forEach((card,index)=>{
+//         if(index === boxdeplacer.index){
+//             boxdeplacer.element.style.display = "none"
+//         }
+//     })
+
+// }

@@ -21,74 +21,76 @@
 
 
         </div>
-        <div class="flex justify-center items-center h-[20%]">
-            <button class="p-2 w-[90%] bg-blue-500 rounded-2xl font-bold text-white " id="openinformations"
+        <div class="flex flex-col gap-5 justify-center items-center h-[20%]">
+            <button class="p-2 w-[90%] bg-blue-500 rounded-2xl font-bold text-white cursor-pointer" id="openinformations"
                 type="submit">+ Add New</button>
+            <button class="p-2 w-[90%] bg-red-500 rounded-2xl font-bold text-white cursor-pointer" id="clearAllEmployer"
+                type="submit">- Clear All</button>
         </div>
     </header>
 
     <main class="w-[85%] h-full flex justify-center items-center">
         <div class="boxRooms w-[96%] h-[90%] border-2 relative ">
             <!-- <img src="s" alt=""> -->
-            <div class="room1 flex flex-col justify-center items-center">
-                <div class="w-1/2 h-1/2 border-2 flex justify-center items-center">
+            <div class="room1 flex flex-col justify-center items-center gap-2">
+                <div class="w-full h-1/2 border-2 flex ">
                     <h2 class="text-black font-bold">Salle de conférence</h2>
                 </div>
                 <div class="">
-                    <button name-rooms = "conférence" type="submit" class="btnAdd">+</button>
+                    <button name-rooms ="conférence" type="submit" class="btnAdd cursor-pointer">+</button>
                 </div>
             </div>
             <div class="room2 flex  justify-center items-center">
                 <div class="w-1/2 h-1/2"></div>
             </div>
             <div class="room3 flex flex-col justify-center items-center gap-2">
-                <div class="w-1/2 h-1/2 border-2 flex justify-center items-center">
+                <div class="w-full h-1/2 border-2 flex ">
                     <h2 class="text-black font-bold">Salle des serveurs </h2>
                 </div>
                 <div class="">
-                    <button name-rooms = "serveurs" type="submit" class="btnAdd">+</button>
+                    <button name-rooms ="serveurs" type="submit" class="btnAdd cursor-pointer">+</button>
                 </div>
             </div>
             <div class="room4 flex flex-col justify-center items-center">
-                <div class="w-1/2 h-1/2 border-2 flex justify-center items-center">
-                    <h2 class="text-black font-bold">Salle de sécurité</h2>
+                <div class="test w-full h-1/2 border-2 flex ">
+                    <h2 id="secur" class="text-black font-bold">Salle de sécurité</h2>
                 </div>
                 <div class="">
-                    <button name-rooms ="sécurité"   type="submit" class="btnAdd">+</button>
+                    <button name-rooms ="sécurité"   type="submit" class="btnAdd cursor-pointer">+</button>
                 </div>
             </div>
             <div class="room5 flex flex-col justify-center items-center">
-                <div class="w-1/2 h-1/2 border-2 flex justify-center items-center">
+                <div class="w-1/2 h-1/2 border-2 flex ">
                     <h2 class="text-black font-bold">Réception</h2>
                 </div>
                 <div class="">
-                    <button name-rooms ="Réception" type="submit" class="btnAdd">+</button>
+                    <button name-rooms ="Réception" type="submit" class="btnAdd cursor-pointer">+</button>
                 </div>
             </div>
             <div class="room6 flex justify-center items-center">
                 <div class="w-1/2 h-1/2 "></div>
             </div>
             <div class="room7 flex flex-col justify-center items-center">
-                <div class="w-1/2 h-1/2 border-2 flex justify-center items-center">
+                <div class="w-1/2 h-1/2 border-2 flex ">
                     <h2 class="text-black font-bold">Salle du personnel</h2>
                 </div>
                 <div class="">
-                    <button name-rooms = "personnel" type="submit" class="btnAdd">+</button>
+                    <button name-rooms = "personnel" type="submit" class="btnAdd cursor-pointer">+</button>
                 </div>
             </div>
             <div class="room8 flex flex-col justify-center items-center">
-                <div class="w-1/2 h-1/2 border-2 flex justify-center items-center">
+                <div class="w-1/2 h-1/2 border-2 flex ">
                     <h2 class="text-black font-bold">Salle d’archives</h2>
                 </div>
                 <div class="">
-                    <button name-rooms = "archives" type="submit" class="btnAdd">+</button>
+                    <button name-rooms = "archives" type="submit" class="btnAdd cursor-pointer">+</button>
                 </div>
             </div>
         </div>
 
         <div class="modal-overlay" id="manage-job-modal" style="display: none;">
             <div class="modal-content">
-                <button class="modal-close-btn" id="modal-close-btn-manage" aria-label="Fermer">&times;</button>
+                <button class="modal-close-btn cursor-pointer" id="modal-close-btn-manage" aria-label="Fermer">&times;</button>
                 <h2 class="modal-position" id="manage-modal-title">Add Worker</h2>
                 <form class="manage-form" id="manage-job-form" novalidate>
                     <!-- name -->
@@ -150,7 +152,7 @@
                             <div class="boxInput">
                                 <label for="from">From :</label>
                                 <br>
-                                <input type="date" class="fromOrigin" id="from">
+                                <input type="date" class="fromOrigin" id="from" >
                                 <span class="showError"></span></span>
                             </div>
 
@@ -187,11 +189,11 @@
                     </div>
 
                     <div class="w-full flex justify-end gap-2 ">
-                        <button type="submit" class="p-2 font-bold text-white bg-blue-500 rounded-2xl h-11 w-33"
+                        <button type="submit" class="p-2 font-bold text-white bg-blue-500 rounded-2xl h-11 w-33 cursor-pointer"
                             id="saveWorker">Save
                             Worker</button>
                         <button type="submit"
-                            class="p-2 font-bold text-white bg-gray-500 rounded-2xl h-11 w-25">Cancel</button>
+                            class="p-2 font-bold text-white bg-gray-500 rounded-2xl h-11 w-25 cursor-pointer">Cancel</button>
                     </div>
 
                 </form>
@@ -202,7 +204,7 @@
 
         <div class="addtaches flex flex-col" id="manage-job-modal-tache" style="display: none;">
             <div class="modal-content-tache">
-                <button class="modal-close-btn" id="modal-close-btn-manage-tache" aria-label="Fermer">&times;</button>
+                <button class="modal-close-btn cursor-pointer" id="modal-close-btn-manage-tache" aria-label="Fermer">&times;</button>
                 <h2 class="modal-position" id="Worker-modal-Assign">Select Worker to Assign</h2>
 
                 <div id="FiltrageEmplyer" class="w-full">
@@ -217,7 +219,7 @@
         <!-- popul affichage -->
         <div class="modal-affichage " id="manage-affiche-modal" style="display: none;">
             <div class="modal-content flex flex-col gap-10">
-                <button class="modal-close-btn" id="modal-close-btn-affichage" aria-label="Fermer">&times;</button>
+                <button class="modal-close-btn cursor-pointer" id="modal-close-btn-affichage" aria-label="Fermer">&times;</button>
                 <h2 class="modal-position" id="manage-modal-title">Profile</h2>
                 <form class="manage-form flex flex-col gap-50" id="manage-job-form">
                     <!-- name -->
