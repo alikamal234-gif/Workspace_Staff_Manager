@@ -62,10 +62,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
     clearAllEmployerbtn();
     getData();
     affichageFilter();
+    dragandDrop()
+
+    // location.reload();  
     modalClose.addEventListener("click", () => {
-    informations.style.display = "none"
-    
-})
+        informations.style.display = "none"
+
+    })
 })
 
 // ===================== addevent listiner =========================================
@@ -75,8 +78,12 @@ addNewJobBtn.addEventListener("click", () => {
     informations.style.display = "flex";
 })
 
-
-
+modalCloseBtnManageTache.addEventListener("click", () => {
+    manageJobModalTache.style.display = "none"
+})
+modalCloseBtnAffichage.addEventListener("click", () => {
+    manageAfficheModal.style.display = "none"
+})
 btnAdd.forEach(btn => {
     btn.addEventListener("click", () => {
         manageJobModalTache.style.display = "flex"
@@ -99,12 +106,12 @@ addExperience.addEventListener("click", (e) => {
     creatElxperienceItem()
 })
 
-
+// returnAllEmployees()
 
 // ========================== stocke les dataes dans localeStorage =====================
 function SetData() {
     datalist = JSON.parse(localStorage.getItem("Data")) || [];
-    
+
     const name = document.getElementById("name").value;
     const role = document.getElementById("role").value;
     const photo = document.getElementById("photo").value;
@@ -112,6 +119,10 @@ function SetData() {
     const phone = document.getElementById("phone").value;
 
     if (!formValidation()) {
+        return;
+    }
+    if (!datevalidation()) {
+
         return;
     }
 
@@ -124,14 +135,41 @@ function SetData() {
         email: email,
         phone: phone
     };
-    
+
     datalist.push(data);
     localStorage.setItem("Data", JSON.stringify(datalist));
 
     getData();
     clearInputs();
 }
+function datevalidation() {
+    const experienceContainers = document.querySelectorAll(".boxInputExperience");
 
+    let isValid = true;
+
+    experienceContainers.forEach(container => {
+        const from = container.querySelector("#from").value;
+        const to = container.querySelector("#to").value;
+
+
+        if (from && to) {
+            console.log("From:", from);
+            console.log("To:", to);
+
+            if (from >= to) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "probleme de la date de debut ${from} n'est pas supperieur a la date de fin ${to}!",
+                    footer: '<a href="#">Why do I have this issue?</a>'
+                });
+                isValid = false;
+            }
+        }
+    });
+
+    return isValid;
+}
 // ========================== get data from localeStorage et afficher dans le sidebar ==============================
 function getData() {
     const data = JSON.parse(localStorage.getItem("Data")) || [];
@@ -142,7 +180,7 @@ function getData() {
 
         data.forEach((minidata, index) => {
             placeTache.innerHTML += `
-                <div id-coutor="${index}" class="cards w-[95%] h-20 bg-gray-200 border-2 border-gray-200 rounded-2xl flex items-center p-2 gap-2 mb-2 cursor-pointer">
+                <div draggable="true" id-coutor="${index}" class="cards w-[95%] h-20 bg-gray-200 border-2 border-gray-200 rounded-2xl flex items-center p-2 gap-2 mb-2 cursor-pointer">
                     <div class="w-12 h-12 rounded-full border-2 border-blue-500 overflow-hidden">
                         <img src="${minidata.photo}" alt="${minidata.nom}" class="afficheimg w-full h-full object-cover">
                     </div>
@@ -156,11 +194,11 @@ function getData() {
                 </div>
             `;
         });
-
+        dragandDrop()
         displaySidbar();
         openAfficheModal();
-        attachEditEvents(); // ← AJOUTER ICI
-        
+        attachEditEvents();
+
     } else {
         placeTache.innerHTML = `
             <div class="text-center p-4 text-gray-500">
@@ -178,11 +216,11 @@ function clearInputs() {
     document.getElementById("email").value = "";
     document.getElementById("phone").value = "";
     document.getElementById("imageView").src = "";
-    
+
     placeExperience.innerHTML = "";
-    
+
     informations.style.display = "none";
-    
+
     // Réinitialiser pour mode ajout
     currentEditIndex = null;
     saveWorker.textContent = "Sauvegarder";
@@ -205,6 +243,7 @@ function formValidation() {
     return true;
 }
 
+
 function validationRegexInput(input) {
     const inputId = input.id;
     for (const valid of validationRegex) {
@@ -225,6 +264,7 @@ function validationRegexInput(input) {
 function creatElxperienceItem() {
     placeExperience.innerHTML += `
          <div class="boxInputExperience">
+         <button class="removeExperience p-2 text-red-500 font-bold">X</button>
             <div class="boxInput">
                 <label for="Company">Company :</label>
                 <br>
@@ -251,6 +291,7 @@ function creatElxperienceItem() {
             </div>
         </div>
     `;
+    removeExperiencefun()
 }
 
 function inputexpervalue() {
@@ -312,7 +353,7 @@ function afficheData(dataaffiche) {
     manageAfficheModal.style.display = "flex";
 }
 
-function clearAllEmployerbtn(){
+function clearAllEmployerbtn() {
     clearAllEmployer.addEventListener("click", () => {
         localStorage.clear();
         datalist = [];
@@ -356,10 +397,10 @@ function affichageFilter() {
         btn.addEventListener("click", () => {
             const room = btn.getAttribute("name-rooms");
             const allowedRoles = roomsRoles[room];
-            
+
             placedEmployees = placedEmployees.filter(emp => emp.room === room);
             FiltrageEmplyer.innerHTML = "";
-            
+
             if (allowedRoles) {
                 filterEmployersRole(allowedRoles, btn);
             }
@@ -367,12 +408,12 @@ function affichageFilter() {
     });
 }
 
-function filterEmployersRole(allowedRoles, btn){
+function filterEmployersRole(allowedRoles, btn) {
     const data = JSON.parse(localStorage.getItem("Data")) || [];
     FiltrageEmplyer.innerHTML = "";
 
     data.forEach((minidata, index) => {
-        if(minidata.isAsind === false && allowedRoles.includes(minidata.role)){
+        if (minidata.isAsind === false && allowedRoles.includes(minidata.role)) {
             FiltrageEmplyer.innerHTML += `
                 <div id-coutor="${index}" class="cardsfilter w-[95%] h-20 bg-gray-200 border-2 border-gray-200 rounded-2xl flex items-center p-2 gap-2 mb-2 cursor-pointer">
                     <div class="w-12 h-12 rounded-full border-2 border-blue-500 overflow-hidden">
@@ -393,12 +434,12 @@ function attachFilterEvents(allowedRoles, btn) {
     const cardsfilter = document.querySelectorAll(".cardsfilter");
     const data = JSON.parse(localStorage.getItem("Data")) || [];
     const placedeplacement = btn.parentElement.parentElement.firstElementChild;
-
+    
     cardsfilter.forEach((card) => {
         card.addEventListener("click", () => {
             const index = card.getAttribute("id-coutor");
             const minidata = data[index];
-            
+
             if (minidata && !minidata.isAsind) {
                 minidata.isAsind = true;
                 placedeplacement.innerHTML += `
@@ -412,12 +453,10 @@ function attachFilterEvents(allowedRoles, btn) {
                         </div>
                     </div>
                 `;
-                
+                btn.parentElement.parentElement.style.backgroundColor = "#00000000"
                 localStorage.setItem("Data", JSON.stringify(data));
-                card.remove(); 
+                card.remove();
                 displaySidbar();
-            }else{
-                alert("lah ij3el xi baraka")
             }
         });
     });
@@ -426,7 +465,7 @@ function attachFilterEvents(allowedRoles, btn) {
 function displaySidbar() {
     const data = JSON.parse(localStorage.getItem("Data")) || [];
     const cards = document.querySelectorAll("#placeTache .cards");
-    
+
     cards.forEach(card => {
         const index = card.getAttribute("id-coutor");
         if (data[index] && data[index].isAsind === true) {
@@ -439,23 +478,24 @@ function displaySidbar() {
 
 // ==================== FONCTION DE RETOUR DES EMPLOYÉS ====================
 function returnAllEmployees() {
+    location.reload()
     const data = JSON.parse(localStorage.getItem("Data")) || [];
-    
+
     data.forEach(employee => {
         employee.isAsind = false;
     });
-    
+
     localStorage.setItem("Data", JSON.stringify(data));
-    
+
     document.querySelectorAll('[name-rooms]').forEach(btn => {
         const placedeplacement = btn.parentElement.parentElement.firstElementChild;
         if (placedeplacement) {
             placedeplacement.innerHTML = '';
         }
     });
-    
+
     getData();
-    
+
     console.log("Tous les employés sont retournés à leur place initiale");
 }
 
@@ -466,18 +506,18 @@ let currentEditIndex = null;
 function openEditForm(index) {
     const data = JSON.parse(localStorage.getItem("Data")) || [];
     const employee = data[index];
-    
+
     if (!employee) return;
-    
+
     currentEditIndex = index;
-    
+
     document.getElementById("name").value = employee.nom || "";
     document.getElementById("role").value = employee.role || "";
     document.getElementById("photo").value = employee.photo || "";
     document.getElementById("email").value = employee.email || "";
     document.getElementById("phone").value = employee.phone || "";
     document.getElementById("imageView").src = employee.photo || "";
-    
+
     placeExperience.innerHTML = "";
     if (employee.experience && Array.isArray(employee.experience)) {
         employee.experience.forEach(exp => {
@@ -511,28 +551,27 @@ function openEditForm(index) {
             `;
         });
     }
-    
+
     informations.style.display = "flex";
-    
     saveWorker.textContent = "Modifier";
 }
 
 function updateEmployee() {
     if (currentEditIndex === null) return;
-    
+
     const data = JSON.parse(localStorage.getItem("Data")) || [];
-    
+
     if (!data[currentEditIndex]) {
         alert("Employé non trouvé!");
         return;
     }
-    
+
     if (!formValidation()) {
         return;
     }
-    
+
     data[currentEditIndex] = {
-        isAsind: data[currentEditIndex].isAsind, 
+        isAsind: data[currentEditIndex].isAsind,
         nom: document.getElementById("name").value,
         role: document.getElementById("role").value,
         photo: document.getElementById("photo").value,
@@ -540,14 +579,26 @@ function updateEmployee() {
         phone: document.getElementById("phone").value,
         experience: inputexpervalue()
     };
-    
+
     localStorage.setItem("Data", JSON.stringify(data));
+
     
-    getData();
     
-    cancelEdit();
-    
-    alert("Employé modifié avec succès!");
+    Swal.fire({
+        title: "Do you want to save the changes?",
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: "Save",
+        denyButtonText: `Don't save`
+    }).then((result) => {
+        if (result.isConfirmed) {
+            getData();
+            Swal.fire("Saved!", "", "success");
+        } else if (result.isDenied) {
+            cancelEdit();
+            Swal.fire("Changes are not saved", "", "info");
+        }
+    });
 }
 
 function cancelEdit() {
@@ -557,25 +608,37 @@ function cancelEdit() {
 
 function attachEditEvents() {
     const editButtons = document.querySelectorAll(".editBtn");
-    
+
     editButtons.forEach(btn => {
         btn.addEventListener("click", (e) => {
             e.stopPropagation();
-            
+
             const card = btn.closest(".cards");
             const index = card.getAttribute("id-coutor");
-            
+
             openEditForm(parseInt(index));
         });
     });
 }
-
 function handleSaveWorker(e) {
     e.preventDefault();
-    
+
     if (currentEditIndex !== null) {
         updateEmployee();
     } else {
         SetData();
     }
 }
+
+function removeExperiencefun() {
+    const removeExperience = document.querySelectorAll(".removeExperience")
+
+    removeExperience.forEach(remove => {
+        remove.addEventListener("click", (e) => {
+            e.preventDefault()
+            const removeBox = remove.parentElement
+            removeBox.remove()
+        })
+    })
+}
+
