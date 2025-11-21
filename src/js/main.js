@@ -492,22 +492,7 @@ function attachFilterEvents(allowedRoles, btn) {
 }
 function updateRoomCounter(btn, placedeplacement, roomCapacity) {
     const currentCount = placedeplacement.querySelectorAll('.placed-employee').length;
-    const counterElement = btn.parentElement.querySelector('.room-counter');
-
-    if (!counterElement) {
-        const counter = document.createElement('div');
-        counter.className = 'room-counter text-xs font-bold text-blue-600';
-        btn.parentElement.appendChild(counter);
-    }
-
-    btn.parentElement.querySelector('.room-counter').textContent =
-        `${currentCount}/${roomCapacity}`;
-
-    if (currentCount >= roomCapacity) {
-        btn.parentElement.querySelector('.room-counter').classList.add('text-red-600');
-    } else {
-        btn.parentElement.querySelector('.room-counter').classList.remove('text-red-600');
-    }
+    
 }
 function attachRemoveFromRoomEvents() {
     const removeButtons = document.querySelectorAll('.remove-from-room');
