@@ -3,7 +3,6 @@
     grid-area: room1;
     width: 100%;
    
-    
 }
 .room-counter {
     position: absolute;
@@ -268,6 +267,28 @@ option{
 option:checked{
     background-color: rgba(0, 255, 255, 0.336);
 }
+
+.animationbox{
+    animation: box 1s ease;
+}
+@keyframes box{
+    0%{
+        transform: translateX(2px);
+    }
+    25%{
+        transform: translateX(-2px);
+    }
+    50%{
+        transform: translateX(2px);
+    }
+    75%{
+        transform: translateX(-2px);
+    }
+    100%{
+        transform: translateX(2px);
+    }
+}
+
 @media (max-width : 768px){
     body{
         display: block;
@@ -341,4 +362,5 @@ option:checked{
 }
 
 }
+
 

@@ -15,6 +15,7 @@ const modalCloseBtnAffichage = document.getElementById("modal-close-btn-affichag
 const modalContentTache = document.querySelector(".modal-content-tache")
 const FiltrageEmplyer = document.getElementById("FiltrageEmplyer")
 const clearAllEmployer = document.getElementById("clearAllEmployer")
+const boxRooms= document.querySelector(".boxRooms")
 
 
 // ==================== CONFIGURATION DES CAPACITÉS DES SALLES ====================
@@ -68,13 +69,11 @@ const validationRegex = [
 // ==============================================================================
 let datalist = JSON.parse(localStorage.getItem("Data")) || [];
 
-document.addEventListener("DOMContentLoaded", (event) => {
+document.addEventListener("DOMContentLoaded", () => {
+    dragsupprime()
     clearAllEmployerbtn();
     getData();
     affichageFilter();
-    // dragandDrop()
-    dragsupprime()
-    // location.reload();  
     modalClose.addEventListener("click", () => {
         informations.style.display = "none"
 
@@ -148,9 +147,11 @@ function SetData() {
 
     datalist.push(data);
     localStorage.setItem("Data", JSON.stringify(datalist));
-    dragsupprime() 
     getData();
     clearInputs();
+    setTimeout(() => {
+        dragsupprime();
+    }, 100);
 }
 function datevalidation() {
     const experienceContainers = document.querySelectorAll(".boxInputExperience");
@@ -203,12 +204,12 @@ function getData() {
                     </div>
                 </div>
             `;
+            
         });
-        // dragandDrop()
-         dragsupprime();
         displaySidbar();
         openAfficheModal();
         attachEditEvents();
+         dragsupprime();
 
     } else {
         placeTache.innerHTML = `
@@ -482,14 +483,17 @@ function attachFilterEvents(allowedRoles, btn) {
                 `;
                 btn.parentElement.parentElement.style.backgroundColor = "#00000000";
                 localStorage.setItem("Data", JSON.stringify(data));
+                boxRooms.classList.add("animationbox")
                 card.remove();
                 displaySidbar();
                 updateRoomCounter(btn, placedeplacement, roomCapacity); 
                 attachRemoveFromRoomEvents(); 
+
             }
         });
     });
 }
+boxRooms.classList.remove("animationbox")
 function updateRoomCounter(btn, placedeplacement, roomCapacity) {
     const currentCount = placedeplacement.querySelectorAll('.placed-employee').length;
     
