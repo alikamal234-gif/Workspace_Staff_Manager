@@ -2,12 +2,20 @@
 .room1{
     grid-area: room1;
     width: 100%;
+   
     
-    
+}
+.room-counter {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: bold;
 }
 .room2{
     grid-area: room2;
-    /* position: fixed; */
     
 }
 .room3{

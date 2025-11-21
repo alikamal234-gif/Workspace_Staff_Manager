@@ -16,6 +16,16 @@ const modalContentTache = document.querySelector(".modal-content-tache")
 const FiltrageEmplyer = document.getElementById("FiltrageEmplyer")
 const clearAllEmployer = document.getElementById("clearAllEmployer")
 
+
+// ==================== CONFIGURATION DES CAPACITÉS DES SALLES ====================
+const roomCapacities = {
+    "conférence": 2,
+    "serveurs": 2,
+    "sécurité": 2,
+    "Réception": 2,
+    "personnel": 2,
+    "archives": 2
+};
 //================= les objects de validation rejex =====================================
 const validationRegex = [
     {
@@ -62,8 +72,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
     clearAllEmployerbtn();
     getData();
     affichageFilter();
-    dragandDrop()
-
+    // dragandDrop()
+    dragsupprime()
     // location.reload();  
     modalClose.addEventListener("click", () => {
         informations.style.display = "none"
@@ -73,7 +83,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 // ===================== addevent listiner =========================================
 addNewJobBtn.addEventListener("click", () => {
-    currentEditIndex = null; // Réinitialiser pour mode ajout
+    currentEditIndex = null; 
     saveWorker.textContent = "Sauvegarder";
     informations.style.display = "flex";
 })
@@ -92,7 +102,7 @@ btnAdd.forEach(btn => {
 
 modalClose.addEventListener("click", () => {
     informations.style.display = "none";
-    cancelEdit(); // ← AJOUTER ICI
+    cancelEdit(); 
 })
 
 saveWorker.addEventListener("click", handleSaveWorker); // ← CHANGER ICI
@@ -138,7 +148,7 @@ function SetData() {
 
     datalist.push(data);
     localStorage.setItem("Data", JSON.stringify(datalist));
-
+    dragsupprime() 
     getData();
     clearInputs();
 }
@@ -160,7 +170,7 @@ function datevalidation() {
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
-                    text: "probleme de la date de debut ${from} n'est pas supperieur a la date de fin ${to}!",
+                    text: `probleme de la date de debut ${from} n'est pas supperieur a la date de fin ${to}!`,
                     footer: '<a href="#">Why do I have this issue?</a>'
                 });
                 isValid = false;
@@ -194,7 +204,8 @@ function getData() {
                 </div>
             `;
         });
-        dragandDrop()
+        // dragandDrop()
+         dragsupprime();
         displaySidbar();
         openAfficheModal();
         attachEditEvents();
@@ -208,7 +219,6 @@ function getData() {
     }
 }
 // ======================= clear all input after click sur save =================================================
-// ======================= clear all input after click sur save =================================================
 function clearInputs() {
     document.getElementById("name").value = "";
     document.getElementById("role").value = "";
@@ -221,7 +231,6 @@ function clearInputs() {
 
     informations.style.display = "none";
 
-    // Réinitialiser pour mode ajout
     currentEditIndex = null;
     saveWorker.textContent = "Sauvegarder";
 }
@@ -394,6 +403,12 @@ function affichageFilter() {
     };
 
     btnAdd.forEach(btn => {
+        // Initialiser les compteurs
+        const room = btn.getAttribute("name-rooms");
+        const roomCapacity = roomCapacities[room];
+        const placedeplacement = btn.parentElement.parentElement.firstElementChild;
+        updateRoomCounter(btn, placedeplacement, roomCapacity);
+
         btn.addEventListener("click", () => {
             const room = btn.getAttribute("name-rooms");
             const allowedRoles = roomsRoles[room];
@@ -407,7 +422,6 @@ function affichageFilter() {
         });
     });
 }
-
 function filterEmployersRole(allowedRoles, btn) {
     const data = JSON.parse(localStorage.getItem("Data")) || [];
     FiltrageEmplyer.innerHTML = "";
@@ -434,9 +448,21 @@ function attachFilterEvents(allowedRoles, btn) {
     const cardsfilter = document.querySelectorAll(".cardsfilter");
     const data = JSON.parse(localStorage.getItem("Data")) || [];
     const placedeplacement = btn.parentElement.parentElement.firstElementChild;
-    
+    const room = btn.getAttribute("name-rooms");
+    const roomCapacity = roomCapacities[room] || 2; 
+
     cardsfilter.forEach((card) => {
         card.addEventListener("click", () => {
+            const currentEmployees = placedeplacement.querySelectorAll('.placed-employee').length;
+            if (currentEmployees >= roomCapacity) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Capacité maximale atteinte",
+                    text: `La salle ${room} ne peut accueillir que ${roomCapacity} employés maximum.`,
+                });
+                return;
+            }
+
             const index = card.getAttribute("id-coutor");
             const minidata = data[index];
 
@@ -451,17 +477,68 @@ function attachFilterEvents(allowedRoles, btn) {
                             <h2 class="font-bold text-sm">${minidata.nom}</h2>
                             <p class="textRole text-gray-500 text-xs">${minidata.role}</p>
                         </div>
+                        <button class="remove-from-room text-red-500 text-xs font-bold">X</button>
                     </div>
                 `;
-                btn.parentElement.parentElement.style.backgroundColor = "#00000000"
+                btn.parentElement.parentElement.style.backgroundColor = "#00000000";
                 localStorage.setItem("Data", JSON.stringify(data));
                 card.remove();
                 displaySidbar();
+                updateRoomCounter(btn, placedeplacement, roomCapacity); 
+                attachRemoveFromRoomEvents(); 
+            }
+        });
+    });
+}
+function updateRoomCounter(btn, placedeplacement, roomCapacity) {
+    const currentCount = placedeplacement.querySelectorAll('.placed-employee').length;
+    const counterElement = btn.parentElement.querySelector('.room-counter');
+
+    if (!counterElement) {
+        const counter = document.createElement('div');
+        counter.className = 'room-counter text-xs font-bold text-blue-600';
+        btn.parentElement.appendChild(counter);
+    }
+
+    btn.parentElement.querySelector('.room-counter').textContent =
+        `${currentCount}/${roomCapacity}`;
+
+    if (currentCount >= roomCapacity) {
+        btn.parentElement.querySelector('.room-counter').classList.add('text-red-600');
+    } else {
+        btn.parentElement.querySelector('.room-counter').classList.remove('text-red-600');
+    }
+}
+function attachRemoveFromRoomEvents() {
+    const removeButtons = document.querySelectorAll('.remove-from-room');
+
+    removeButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const employeeDiv = button.closest('.placed-employee');
+            const index = employeeDiv.getAttribute('id-coutor');
+            const data = JSON.parse(localStorage.getItem("Data")) || [];
+
+            if (data[index]) {
+                data[index].isAsind = false;
+                localStorage.setItem("Data", JSON.stringify(data));
+                employeeDiv.remove();
+                getData(); 
+
+                updateAllRoomCounters();
             }
         });
     });
 }
 
+function updateAllRoomCounters() {
+    btnAdd.forEach(btn => {
+        const room = btn.getAttribute("name-rooms");
+        const roomCapacity = roomCapacities[room];
+        const placedeplacement = btn.parentElement.parentElement.firstElementChild;
+        updateRoomCounter(btn, placedeplacement, roomCapacity);
+    });
+}
 function displaySidbar() {
     const data = JSON.parse(localStorage.getItem("Data")) || [];
     const cards = document.querySelectorAll("#placeTache .cards");
@@ -478,7 +555,6 @@ function displaySidbar() {
 
 // ==================== FONCTION DE RETOUR DES EMPLOYÉS ====================
 function returnAllEmployees() {
-    location.reload()
     const data = JSON.parse(localStorage.getItem("Data")) || [];
 
     data.forEach(employee => {
@@ -495,10 +571,9 @@ function returnAllEmployees() {
     });
 
     getData();
-
+    updateAllRoomCounters(); 
     console.log("Tous les employés sont retournés à leur place initiale");
 }
-
 // ==================== FONCTIONS DE MODIFICATION ====================
 
 let currentEditIndex = null;
@@ -582,8 +657,8 @@ function updateEmployee() {
 
     localStorage.setItem("Data", JSON.stringify(data));
 
-    
-    
+
+
     Swal.fire({
         title: "Do you want to save the changes?",
         showDenyButton: true,
@@ -642,3 +717,124 @@ function removeExperiencefun() {
     })
 }
 
+function dragsupprime() {
+    const data = JSON.parse(localStorage.getItem("Data")) || [];
+    const cards = document.querySelectorAll(".cards")
+    const placeTache = document.getElementById("placeTache")
+    const room2 = document.querySelector(".room2")
+
+    let drag = null
+    cards.forEach(card => {
+        card.addEventListener("dragstart", (e) => {
+            card.style.opacity = "0.5";
+            drag = card
+        });
+        card.addEventListener("dragend", () => {
+            card.style.opacity = "1";
+            drag = null
+        });
+    })
+    room2.addEventListener("dragover", (e) => {
+        e.preventDefault()
+        room2.style.backgroundColor = "rgba(255, 0, 0, 0.13)"
+    })
+    room2.addEventListener("drop", (e) => {
+        e.preventDefault();
+        room2.style.backgroundColor = "";
+
+        if (!drag) {
+            console.log("No drag element found");
+            return;
+        }
+
+        const id = parseInt(drag.getAttribute("id-coutor"));
+        const data = JSON.parse(localStorage.getItem("Data")) || [];
+
+        if ( id < 0 || id >= data.length) {
+            console.log("Invalid employee ID");
+            return;
+        }
+
+        const employeeName = data[id]?.nom || "Employee";
+
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
+        });
+
+        swalWithBootstrapButtons.fire({
+            title: "Are you sure?",
+            text: `Do you want to delete ${employeeName}? This action cannot be undone!`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+              
+                data.splice(id, 1);
+                localStorage.setItem("Data", JSON.stringify(data));
+                getData();
+
+                swalWithBootstrapButtons.fire({
+                    title: "Deleted!",
+                    text: `${employeeName} has been deleted.`,
+                    icon: "success"
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalWithBootstrapButtons.fire({
+                    title: "Cancelled",
+                    text: `${employeeName} is safe :)`,
+                    icon: "error"
+                });
+            }
+        });
+    });
+
+}
+
+function dragandDrop() {
+    const cards = document.querySelectorAll(".cards")
+    const room = document.querySelectorAll(".room")
+    let drag = null
+    cards.forEach(card => {
+        card.addEventListener("dragstart", (e) => {
+            card.style.opacity = "0.5";
+            drag = card
+        });
+        card.addEventListener("dragend", () => {
+            card.style.opacity = "1";
+            drag = null
+        });
+    })
+    room.forEach(roo => {
+        roo.addEventListener("dragover", (e) => {
+            e.preventDefault()
+            roo.style.backgroundColor = "rgba(0, 0, 0, 0.314)"
+        })
+        roo.addEventListener("dragleave", () => {
+            roo.style.backgroundColor = ""
+        })
+        roo.addEventListener("drop", () => {
+            roo.firstElementChild.append(drag)
+        })
+
+    })
+
+    placeTache.addEventListener("dragover", (e) => {
+        e.preventDefault()
+        placeTache.style.backgroundColor = "rgba(0, 0, 0, 0.314)"
+    })
+    placeTache.addEventListener("dragleave", () => {
+        placeTache.style.backgroundColor = ""
+    })
+    placeTache.addEventListener("drop", () => {
+        placeTache.firstElementChild.append(drag)
+    })
+
+
+}
