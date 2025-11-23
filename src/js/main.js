@@ -15,7 +15,6 @@ const modalCloseBtnAffichage = document.getElementById("modal-close-btn-affichag
 const modalContentTache = document.querySelector(".modal-content-tache")
 const FiltrageEmplyer = document.getElementById("FiltrageEmplyer")
 const clearAllEmployer = document.getElementById("clearAllEmployer")
-const boxRooms= document.querySelector(".boxRooms")
 
 
 // ==================== CONFIGURATION DES CAPACITÉS DES SALLES ====================
@@ -69,11 +68,13 @@ const validationRegex = [
 // ==============================================================================
 let datalist = JSON.parse(localStorage.getItem("Data")) || [];
 
-document.addEventListener("DOMContentLoaded", () => {
-    dragsupprime()
+document.addEventListener("DOMContentLoaded", (event) => {
     clearAllEmployerbtn();
     getData();
     affichageFilter();
+    // dragandDrop()
+    dragsupprime()
+    // location.reload();  
     modalClose.addEventListener("click", () => {
         informations.style.display = "none"
 
@@ -147,11 +148,9 @@ function SetData() {
 
     datalist.push(data);
     localStorage.setItem("Data", JSON.stringify(datalist));
+    dragsupprime() 
     getData();
     clearInputs();
-    setTimeout(() => {
-        dragsupprime();
-    }, 100);
 }
 function datevalidation() {
     const experienceContainers = document.querySelectorAll(".boxInputExperience");
@@ -204,12 +203,12 @@ function getData() {
                     </div>
                 </div>
             `;
-            
         });
+        // dragandDrop()
+         dragsupprime();
         displaySidbar();
         openAfficheModal();
         attachEditEvents();
-         dragsupprime();
 
     } else {
         placeTache.innerHTML = `
@@ -428,7 +427,7 @@ function filterEmployersRole(allowedRoles, btn) {
     FiltrageEmplyer.innerHTML = "";
 
     data.forEach((minidata, index) => {
-        if (minidata.isAsind === false && allowedRoles.includes(minidata.role)) {
+        if (!minidata.isAsind && allowedRoles.includes(minidata.role)) {
             FiltrageEmplyer.innerHTML += `
                 <div id-coutor="${index}" class="cardsfilter w-[95%] h-20 bg-gray-200 border-2 border-gray-200 rounded-2xl flex items-center p-2 gap-2 mb-2 cursor-pointer">
                     <div class="w-12 h-12 rounded-full border-2 border-blue-500 overflow-hidden">
@@ -483,18 +482,16 @@ function attachFilterEvents(allowedRoles, btn) {
                 `;
                 btn.parentElement.parentElement.style.backgroundColor = "#00000000";
                 localStorage.setItem("Data", JSON.stringify(data));
-                boxRooms.classList.add("animationbox")
                 card.remove();
                 displaySidbar();
-                updateRoomCounter(btn, placedeplacement, roomCapacity); 
+                updateRoomCounter(btn, placedeplacement); 
                 attachRemoveFromRoomEvents(); 
-
+                
             }
         });
     });
 }
-boxRooms.classList.remove("animationbox")
-function updateRoomCounter(btn, placedeplacement, roomCapacity) {
+function updateRoomCounter(btn, placedeplacement) {
     const currentCount = placedeplacement.querySelectorAll('.placed-employee').length;
     
 }
@@ -827,3 +824,21 @@ function dragandDrop() {
 
 
 }
+// filtrageRecherche()
+const inpSearch = document.getElementById("inpSearch")
+const child = document.getElementById("placeTache").children
+inpSearch.addEventListener("input",()=>{
+        Array.from(child).forEach(card => {
+            const nom = card.querySelector(".affichenom").textContent.toLocaleLowerCase()
+            
+            const role = card.querySelector(".textRole").textContent.toLocaleLowerCase()
+            if((nom.includes(inpSearch.value.toLocaleLowerCase()))){
+                card.style.display = "flex"
+            }else if((role.includes(inpSearch.value.toLocaleLowerCase()))){
+                card.style.display = "flex"
+            }else {
+                card.style.display = "none"
+            }
+            
+        })
+    })

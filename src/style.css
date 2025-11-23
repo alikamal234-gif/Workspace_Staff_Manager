@@ -301,7 +301,7 @@ option:checked{
         width: 100%;
     }
     .boxRooms{
-        background-image: none;
+        /* background-image: none; */
         width: 100%;
     }
     
