@@ -72,8 +72,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
     clearAllEmployerbtn();
     getData();
     affichageFilter();
-    // dragandDrop()
+    filtrageRecherche()
     dragsupprime()
+    deleteEmployee()
     // location.reload();  
     modalClose.addEventListener("click", () => {
         informations.style.display = "none"
@@ -198,8 +199,9 @@ function getData() {
                         <h2 class="affichenom font-bold">${minidata.nom}</h2>
                         <p class="textRole text-gray-500">${minidata.role}</p>
                     </div>
-                    <div>
-                        <button class="editBtn text-yellow-500 font-bold hover:text-yellow-600">Edit</button>
+                    <div class="flex items-center gap-4" >
+                    <button class="editBtn text-yellow-500 font-bold hover:text-yellow-600">Edit</button>
+                    <button class="supprimeBtn text-red-500 font-bold hover:text-red-600"><svg class=" w-5 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M576 192C576 156.7 547.3 128 512 128L205.3 128C188.3 128 172 134.7 160 146.7L9.4 297.4C3.4 303.4 0 311.5 0 320C0 328.5 3.4 336.6 9.4 342.6L160 493.3C172 505.3 188.3 512 205.3 512L512 512C547.3 512 576 483.3 576 448L576 192zM284.1 252.1C293.5 242.7 308.7 242.7 318 252.1L351.9 286L385.8 252.1C395.2 242.7 410.4 242.7 419.7 252.1C429 261.5 429.1 276.7 419.7 286L385.8 319.9L419.7 353.8C429.1 363.2 429.1 378.4 419.7 387.7C410.3 397 395.1 397.1 385.8 387.7L351.9 353.8L318 387.7C308.6 397.1 293.4 397.1 284.1 387.7C274.8 378.3 274.7 363.1 284.1 353.8L318 319.9L284.1 286C274.7 276.6 274.7 261.4 284.1 252.1z"/></svg></button>
                     </div>
                 </div>
             `;
@@ -209,7 +211,7 @@ function getData() {
         displaySidbar();
         openAfficheModal();
         attachEditEvents();
-
+        deleteEmployee()
     } else {
         placeTache.innerHTML = `
             <div class="text-center p-4 text-gray-500">
@@ -825,9 +827,11 @@ function dragandDrop() {
 
 }
 // filtrageRecherche()
-const inpSearch = document.getElementById("inpSearch")
+function filtrageRecherche(){
+    const inpSearch = document.getElementById("inpSearch")
 const child = document.getElementById("placeTache").children
 inpSearch.addEventListener("input",()=>{
+    trierEmployesParOrdreAlphabetique()
         Array.from(child).forEach(card => {
             const nom = card.querySelector(".affichenom").textContent.toLocaleLowerCase()
             
@@ -842,3 +846,65 @@ inpSearch.addEventListener("input",()=>{
             
         })
     })
+}
+
+function deleteEmployee(){
+
+    const supprimeBtn = document.querySelectorAll(".supprimeBtn")
+    let datalist = JSON.parse(localStorage.getItem("Data")) || [];
+    supprimeBtn.forEach(btnS => {
+        btnS.onclick = (e)=> {
+            e.stopPropagation()
+            const idEmployee = btnS.closest("[id-coutor]").getAttribute("id-coutor")
+            const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
+        });
+
+        swalWithBootstrapButtons.fire({
+            title: "Are you sure?",
+            text: `Do you want to delete  ${btnS.closest("[id-coutor]").querySelector(".affichenom").textContent} ? This action cannot be undone!`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+              
+                datalist.splice(idEmployee,1)
+            localStorage.setItem("Data",JSON.stringify(datalist))
+            getData()
+
+                swalWithBootstrapButtons.fire({
+                    title: "Deleted!",
+                    text: `${employeeName} has been deleted.`,
+                    icon: "success"
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swalWithBootstrapButtons.fire({
+                    title: "Cancelled",
+                    text: `${employeeName} is safe :)`,
+                    icon: "error"
+                });
+            }
+        });
+
+            
+            
+        }
+    })
+}
+trierEmployesParOrdreAlphabetique()
+function trierEmployesParOrdreAlphabetique() {
+    const data = JSON.parse(localStorage.getItem("Data")) || [];
+    
+    data.sort((a, b) => a.nom.localeCompare(b.nom));
+    
+    localStorage.setItem("Data", JSON.stringify(data));
+    getData();
+    console.log("Employés triés par ordre alphabétique");
+}
